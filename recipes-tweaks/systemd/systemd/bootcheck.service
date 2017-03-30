@@ -1,0 +1,10 @@
+[Unit]
+Description=sets the bootcheck variable
+
+[Service]
+ExecStart=/usr/sbin/bootcheck.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

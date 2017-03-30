@@ -1,0 +1,45 @@
+From 536fb487bc468a3528e2ee2842ab703ee2087dff Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Fri, 31 Mar 2017 10:25:16 +0200
+Subject: [PATCH] adapt fw-utils settings to our layout
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ tools/env/fw_env.config | 20 ++------------------
+ 1 file changed, 2 insertions(+), 18 deletions(-)
+
+diff --git a/tools/env/fw_env.config b/tools/env/fw_env.config
+index 7916ebd..97d64bf 100644
+--- a/tools/env/fw_env.config
++++ b/tools/env/fw_env.config
+@@ -6,25 +6,9 @@
+ # be the same as the Environment size, which is valid for NOR and SPI-dataflash
+ # Device offset must be prefixed with 0x to be parsed as a hexadecimal value.
+ 
+-# NOR example
+-# MTD device name	Device offset	Env. size	Flash sector size	Number of sectors
+-/dev/mtd1		0x0000		0x4000		0x4000
+-/dev/mtd2		0x0000		0x4000		0x4000
+-
+-# MTD SPI-dataflash example
+-# MTD device name	Device offset	Env. size	Flash sector size	Number of sectors
+-#/dev/mtd5		0x4200		0x4200
+-#/dev/mtd6		0x4200		0x4200
+-
+-# NAND example
+-#/dev/mtd0		0x4000		0x4000		0x20000			2
+-
+ # On a block device a negative offset is treated as a backwards offset from the
+ # end of the device/partition, rather than a forwards offset from the start.
+ 
+-# Block device example
+-#/dev/mmcblk0		0xc0000		0x20000
+-#/dev/mmcblk0		-0x20000	0x20000
++# device name		Device offset	Env. size	Flash sector size	Number of sectors
+ 
+-# VFAT example
+-#/boot/uboot.env	0x0000          0x4000
++/dev/mmcblk3boot0	0x300000	0x2000
+-- 
+1.9.1
+
