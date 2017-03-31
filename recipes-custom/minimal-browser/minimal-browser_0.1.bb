@@ -32,6 +32,8 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/minimal-browser.conf ${D}${sysconfdir}/minimal-browser.conf
 }
 
+DEPENDS += "qtwebengine systemd qtquick1 qtdeclarative"
+
 RDEPENDS_${PN} += "qtwebengine qtbase-plugins systemd "
 RDEPENDS_${PN} += "qtsvg-plugins qtgraphicaleffects-qmlplugins qtwebengine-qmlplugins qtquickcontrols-qmlplugins qtquick1 qtdeclarative qtdeclarative-qmlplugins "
 
