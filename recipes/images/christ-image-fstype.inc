@@ -35,7 +35,7 @@ fakeroot do_imagedeploy() {
 #    echo "${IMAGE_NAME}${PV}_${DATE}" >> ${IMAGE_ROOTFS}/etc/issue
 #    echo "" >> ${IMAGE_ROOTFS}/etc/issue
 
-    sha1sum ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-*pixi.dtb ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} \
+    sha1sum ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE} ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} \
         ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.tar.bz2 > ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums
 
     sed -i "s/\/.*\///g" ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums
@@ -54,7 +54,7 @@ fakeroot do_imagedeploy() {
         fi
     fi
 
-    7z a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-${PV}.7z ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-*-christ.dtb \
+    7z a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-${PV}.7z ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE} \
         ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.tar.bz2 ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums \
         ${NO_UBOOT_FILE} ${CUSTOM_FILE}
 
