@@ -6,6 +6,9 @@ SRC_URI = "git://github.com/software-celo/u-boot-fslc.git;branch=${SRCBRANCH} \
     	   file://christ_bootlogo.bmp \
 "
 
+# The bootlogo can be generated as follows:
+# convert logo.png -type Palette -colors 126 -compress none -verbose BMP3:christ_bootlogo.bmp
+
 do_patch_append () {
     bb.build.exec_func('do_insert_bootlogo', d)
 }
