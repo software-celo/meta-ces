@@ -119,7 +119,7 @@ IMAGE_LOGIN_MANAGER = "busybox shadow"
 
 EXTRA_USERS_PARAMS = " usermod -P root123 root; "
 
-export IMAGE_BASENAME = "pixi-qt-demoimage"
+export IMAGE_BASENAME = "ces-qt-demoimage"
 
 INHERIT += "buildhistory"
 
