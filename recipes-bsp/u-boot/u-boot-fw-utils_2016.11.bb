@@ -7,7 +7,7 @@ DEPENDS = "mtd-utils"
 # This revision corresponds to the tag "v2016.07"
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "3a39c461ac1ca9ef03be180f2c1af6a2b11315f9"
+SRCREV = "eff5e86ca9daaac58d3aa5ec30536cbec460dd6e"
 
 SRCBRANCH ??="ces-morty-2016.11+fslc"
 
