@@ -57,7 +57,7 @@ IMAGE_INSTALL += " \
     tzdata-right \ 
     tzdata-europe \ 
     minimal-browser \
-    canutils \
+    can-utils \
     libsocketcan \
     iproute2 \
 "
