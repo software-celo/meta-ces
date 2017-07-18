@@ -1,0 +1,132 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Christ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class=banner>
+            <img src="header-logo-left.png">
+            <div class="spacer"></div>
+        </div>
+        <h1>i.MX6 Evalkit</h1>
+        <h2>Basic Information &amp; First Steps</h2>
+        <img id="logo" src="header-logo-center.png" alt="christ">
+    </header>
+    <section>
+        <header>
+            <h1>Accessing the System via RS232 or SSH</h1>
+        </header>
+        <main>
+            <ul>
+                <li>RS232: Use one of the included RS232 adapter cables and a null modem cable to connect the evalkit to your PC</li>
+                <ul>
+                    <li>Terminal settings: 115200 baud 8N1</li>
+                    <li>User: root</li>
+                    <li>Password: root123</li>
+                </ul>
+                <li>SSH:</li>
+                <ul>
+                    <li>Port 22</li>
+                    <li>User: root</li>
+                    <li>Password: root123</li>
+                </ul>
+            </ul>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Default Settings</h1>
+        </header>
+        <main>
+            <ul>
+                <li>Network address settings: DHCP</li>
+                <ul>
+                    <li>Configurable in /etc/system/network/wired0.network</li>
+                    <ul>
+                        <li>DHCP default settings:</li>
+                        <ul class="no-bullet-point">
+                            <li>[Match]</li>
+                            <li>Name=eth0</li>
+                            <li>[Network]</li>
+                            <li>DHCP=yes</li>
+                        </ul>
+                        <li>Simple static IP example: </li>
+                        <ul class="no-bullet-point">
+                            <li>[Match]</li>
+                            <li>Name=eth0</li>
+                            <li>[Network]</li>
+                            <li>Address=192.168.56.1/24</li>
+                        </ul>
+                    </ul>
+                    <li>Restart systemd-networkd to reload your configuration</li>
+                    <ul>
+                        <li>systemctl restart systemd-networkd</li>
+                    </ul>
+                    <li>For more information refer to <a href="https://www.freedesktop.org/software/systemd/man/systemd.network.html">https://www.freedesktop.org/software/systemd/man/systemd.network.html</a></li>
+                </ul>
+                <li>Autostart URL:</li>
+                <ul>
+                    <li>Configurable in /etc/minimal-browser.conf</li>
+                    <ul>
+                        <li>Example: START_URL=https://christ-es.de</li>
+                    </ul>
+                    <li>Restart the browser to reload the webpage</li>
+                    <ul>
+                        <li>systemctl restart minimal-browser.service</li>
+                    </ul>
+                </ul>
+            </ul>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Rebuilding the Image</h1>
+        </header>
+        <main>
+            <p>Our source repositories and short instructions on how to rebuild the image can be found at: <a href="https://github.com/software-celo/ces-bsp-platform">https://github.com/software-celo/ces-bsp-platform</a>.</p>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Browser Information</h1>
+        </header>
+        <main>
+            <div id="userAgentContainer"></div>
+            <p><a>Width: </a><a id="screenWidthContainer"></a><a> px</a><p>
+            <p><a>Height: </a><a id="screenHeightContainer"></a><a> px</a><p>
+            <p><a>ColorDepth: </a><a id="screenColorDeepContainer"></a><a> bit</a><p>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Contact Information</h1>
+        </header>
+        <main>
+            <div class="address">
+                <p style="color:blue;font-weight:bold">Linux Support</p>
+                <p>Christ – Electronic Systems GmbH</p>
+                <p>Alpenstraße 34</p>
+                <p>D-87700 Memmingen</p>
+                <p>Tel. +49 (0)8331/8371-768</p>
+                <p>linux@christ-es.de</p>
+            </div>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Disclaimer</h1>
+        </header>
+        <main>
+            Technical data are subject to modification and delivery subject to availability. Any liability that the data and illustrations are complete, actual or correct is excluded. Designations may be trademarks and/or copyrights of the respective manufacturer, the use of which by third parties for their own purposes may infringe the rights of such owner.
+        </main>
+    </section>
+    <footer>
+        <img src="footer.png" alt="footer">
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

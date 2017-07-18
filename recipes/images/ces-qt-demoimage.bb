@@ -104,6 +104,7 @@ IMAGE_INSTALL += " \
     stress \
     util-linux \
     systemd-bootcheck \
+    getting-started \
 "
 
 #create the deployment directory-tree
