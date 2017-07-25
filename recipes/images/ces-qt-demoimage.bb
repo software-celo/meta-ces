@@ -2,7 +2,7 @@ SUMMARY = "Image booting a qt5 minimal-browser"
 
 LICENSE = "MIT"
 
-PV = "V2.0"
+PV = "V2.1"
 PR = "r0"
 
 inherit extrausers
@@ -14,13 +14,17 @@ CHRIST_UPDATE_INCLUDE_CUSTOM = ""
 
 IMAGE_LINGUAS = "de-de en-gb"
 
-DISTRO_UPDATE_ALTERNATIVES ??= ""
-ROOTFS_PKGMANAGE_PKGS ?= '${@base_conditional("ONLINE_PACKAGE_MANAGEMENT", "none", "", "${ROOTFS_PKGMANAGE} ${DISTRO_UPDATE_ALTERNATIVES}", d)}'
+SOUND_PKGS_INSTALL = '${@bb.utils.contains("DISTRO_FEATURES", "alsa", "${SOUND_PKGS}", "",d)}'
+SOUND_PKGS = " \
+    packagegroup-fsl-gstreamer1.0-full \
+    alsa-plugins \
+    alsa-tools \
+    alsa-utils \
+"
 
-IMAGE_INSTALL += " \
+IMAGE_INSTALL_append = " \
     packagegroup-basic \
     udev-extra-rules \
-    ${ROOTFS_PKGMANAGE_PKGS} \
     packagegroup-base-extended \
     qtbase \
     qtbase-plugins \
@@ -50,21 +54,7 @@ IMAGE_INSTALL += " \
     can-utils \
     libsocketcan \
     iproute2 \
-    packagegroup-fsl-gstreamer1.0-full \
-    alsa-plugins \
-    alsa-tools \
-    alsa-utils \
-"
-
-
-# Copy Licenses to image /usr/share/common-licenses
-COPY_LIC_MANIFEST = "1"
-COPY_LIC_DIRS = "1"
-
-#create the file /etc/timestamp
-IMAGE_PREPROCESS_COMMAND = "rootfs_update_timestamp"
-
-IMAGE_INSTALL += " \
+    ${SOUND_PKGS_INSTALL} \
     u-boot-fw-utils \
     libusbg \
     curl \
@@ -100,6 +90,13 @@ IMAGE_INSTALL += " \
     systemd-bootcheck \
     getting-started \
 "
+
+# Copy Licenses to image /usr/share/common-licenses
+COPY_LIC_MANIFEST = "1"
+COPY_LIC_DIRS = "1"
+
+#create the file /etc/timestamp
+IMAGE_PREPROCESS_COMMAND = "rootfs_update_timestamp"
 
 #create the deployment directory-tree
 require recipes/images/christ-image-fstype.inc
