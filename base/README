@@ -65,4 +65,4 @@ The following layers are included on this release:
  * meta-ces: christ hardware and software adaption layer
    Path: sources/meta-ces
    Project: https://github.com/software-celo/meta-ces.git
-   Support: pfink@christ-es.de
+   Support: linux@christ-es.de
