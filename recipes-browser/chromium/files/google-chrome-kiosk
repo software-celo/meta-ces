@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# Resistive type touch screen needs calibration
+# Check for 0eef vendor USB ID for egalax usb controller
+lsusb | grep 0eef:
+RESISTIVE=echo $?
+
+if [ "$RESISTIVE" -eq "1" ]; then
+	/usr/bin/xinput_calibrator_once.sh
+fi
+
 export CHROME_DEVEL_SANDBOX=/usr/sbin/chrome-devel-sandbox
 export LD_LIBRARY_PATH=/usr/lib/chromium
 
