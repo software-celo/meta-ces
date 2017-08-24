@@ -10,7 +10,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " file://google-chrome-kiosk.desktop \
                    file://google-chrome-kiosk \
-                   file://chromium-autostart \
+                   file://browser.conf \
                    file://chromium-autostart.service"
 
 # Had to remove '--gpu-no-context-lost' in chromium 48 from extra args i.e. ignore-lost-context from
@@ -33,10 +33,10 @@ RDEPENDS_${PN} += " xinit libexif"
 
 do_install_append() {
 	install -d ${D}${systemd_unitdir}/system
-	install -d ${D}${sysconfdir}/default
+	install -d ${D}${sysconfdir}
 	install -d ${D}${sysconfdir}/systemd/system/graphical.target.wants
 	install -m 0644 ${WORKDIR}/chromium-autostart.service ${D}${systemd_unitdir}/system/chromium-autostart.service
-	install -m 0644 ${WORKDIR}/chromium-autostart ${D}${sysconfdir}/default/chromium-autostart
+	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
 
 	install -Dm 0644 ${WORKDIR}/google-chrome-kiosk.desktop ${D}${datadir}/applications/google-chrome-kiosk.desktop
 	install -Dm 0755 ${WORKDIR}/google-chrome-kiosk ${D}${bindir}/google-chrome-kiosk
@@ -48,4 +48,4 @@ do_install_append() {
 		${D}${sysconfdir}/systemd/system/graphical.target.wants/chromium-autostart.service
 }
 
-FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}/default ${sysconfdir}/systemd/system/graphical.target.wants/chromium-autostart.service ${datadir}/applications/google-chrome-kiosk.desktop ${bindir}/google-chrome-kiosk"
+FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}/browser.conf ${sysconfdir}/systemd/system/graphical.target.wants/chromium-autostart.service ${datadir}/applications/google-chrome-kiosk.desktop ${bindir}/google-chrome-kiosk"
