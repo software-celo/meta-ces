@@ -70,13 +70,17 @@
                 </ul>
                 <li>Autostart URL:</li>
                 <ul>
-                    <li>Configurable in /etc/minimal-browser.conf</li>
+                    <li>Configurable in /etc/browser.conf</li>
                     <ul>
                         <li>Example: START_URL=https://christ-es.de</li>
                     </ul>
-                    <li>Restart the browser to reload the webpage</li>
+                    <li>Restart the browser to reload the webpage (ces-qt-demoimage)</li>
                     <ul>
                         <li>systemctl restart minimal-browser.service</li>
+                    </ul>
+                    <li>Or restart the browser to reload the webpage (ces-x11-chromeimage)</li>
+                    <ul>
+                        <li>systemctl restart chromium-autostart.service</li>
                     </ul>
                 </ul>
             </ul>
