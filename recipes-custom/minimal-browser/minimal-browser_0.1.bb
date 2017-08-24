@@ -18,18 +18,18 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/minimal-browser:"
 
 SRC_URI = "file://minimal-browser_0.1.tgz \
            file://minimal-browser.service \
-           file://minimal-browser.conf"
+           file://browser.conf"
 
 do_install_append() {
 	install -d ${D}${systemd_unitdir}/system
-	install -d ${D}${sysconfdir}/default
+	install -d ${D}${sysconfdir}
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
 	install -m 0644 ${WORKDIR}/minimal-browser.service ${D}${systemd_unitdir}/system/minimal-browser.service
 
 	ln -sf ${systemd_unitdir}/system/minimal-browser.service \
 		${D}${sysconfdir}/systemd/system/multi-user.target.wants/minimal-browser.service
 
-	install -m 0644 ${WORKDIR}/minimal-browser.conf ${D}${sysconfdir}/minimal-browser.conf
+	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
 }
 
 DEPENDS += "qtwebengine systemd qtquick1 qtdeclarative"

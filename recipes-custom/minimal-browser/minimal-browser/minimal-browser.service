@@ -2,7 +2,7 @@
 Description=minimal qt5 webengine browser app
 
 [Service]
-EnvironmentFile=/etc/minimal-browser.conf
+EnvironmentFile=/etc/browser.conf
 ExecStart=/usr/sbin/minimal-browser -platform eglfs --log-level=0 $START_URL
 Restart=on-failure
 RestartSec=1
