@@ -11,8 +11,11 @@ INHERIT += "buildhistory"
 BUILDHISTORY_COMMIT = "1"
 
 # Disable sysvinit for recipes with systemd support
-DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit pulseaudio bluez5 "
 VIRTUAL-RUNTIME_init_manager = "systemd"
 
 # Default features (for packagegroup(-core)-base)
 DISTRO_FEATURES_DEFAULT = "argp ext2 vfat largefile usbgadget usbhost xattr ipv4 ipv6 systemd vfat pam"
+
+# Remove bluez5 appended in fslc-base
+DISTRO_FEATURES_remove = "bluez5"
