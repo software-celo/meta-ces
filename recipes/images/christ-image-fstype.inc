@@ -54,9 +54,15 @@ fakeroot do_imagedeploy() {
         fi
     fi
 
+    ONLY_CUSTOM_FILE=""
+    if [ "1" = ${CHRIST_UPDATE_ONLY_CUSTOM} ]; then
+	touch ${IMAGE_ROOTFS}/../${MACHINE}_bin/ONLY_CUSTOM
+	ONLY_CUSTOM_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/ONLY_CUSTOM"
+    fi
+
     7z a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-${PV}.7z ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE} \
         ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.tar.bz2 ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums \
-        ${NO_UBOOT_FILE} ${CUSTOM_FILE}
+        ${NO_UBOOT_FILE} ${CUSTOM_FILE} ${ONLY_CUSTOM_FILE}
 
 }
 
