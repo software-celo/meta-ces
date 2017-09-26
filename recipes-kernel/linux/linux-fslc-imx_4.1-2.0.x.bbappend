@@ -5,7 +5,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-fslc-imx:"
 
 SRCBRANCH = "ces-morty-4.1-2.0.x-imx"
-SRCREV = "c0cbdd52bd6ad6a052b22fc4d19b4045f40d8a66"
+SRCREV = "a4f5e5f9c03435c106dbb52d4578a87df4ceecda"
 SRC_URI = "git://github.com/software-celo/linux-fslc.git;branch=${SRCBRANCH} \
            file://defconfig \
            file://bootlogo.ppm \
