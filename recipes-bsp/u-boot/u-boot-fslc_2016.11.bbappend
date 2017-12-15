@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/u-boot-fslc:"
 
-SRCREV = "1b8c3f3863bb13ea510de7510c8f453df362962a"
+SRCREV = "fdd0d40c40bedbe53e16b4128aab8ef7929616d1"
 SRCBRANCH = "ces-morty-2016.11+fslc"
 SRC_URI = "git://github.com/software-celo/u-boot-fslc.git;branch=${SRCBRANCH} \
     	   file://christ_bootlogo.bmp \
