@@ -3,7 +3,7 @@
 # Resistive type touch screen needs calibration
 # Check for 0eef vendor USB ID for egalax usb controller
 lsusb | grep 0eef:
-RESISTIVE=echo $?
+RESISTIVE=$?
 
 if [ "$RESISTIVE" -eq "1" ]; then
 	/usr/bin/xinput_calibrator_once.sh
