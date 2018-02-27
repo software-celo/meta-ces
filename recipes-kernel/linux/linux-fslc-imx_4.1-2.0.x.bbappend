@@ -1,11 +1,11 @@
 # Copyright (C) 2015, 2016 O.S. Systems Software LTDA.
-# Copyright (C) 2017 Christ Electronic Systems GmbH
+# Copyright (C) 2017-2018 Christ Electronic Systems GmbH
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-fslc-imx:"
 
-SRCBRANCH = "ces-morty-4.1-2.0.x-imx"
-SRCREV = "40beb6bf6c6daf33c8ad568aa72ac4410b5581b6"
+SRCBRANCH = "ces-rocko-4.1-2.0.x-imx"
+SRCREV = "c949de065f3c03c1f59d87057b8b44793bd2dd6f"
 SRC_URI = "git://github.com/software-celo/linux-fslc.git;branch=${SRCBRANCH} \
            file://defconfig \
            file://bootlogo.ppm \
