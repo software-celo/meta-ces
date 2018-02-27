@@ -9,7 +9,7 @@ U_BOOT_BINARY = "u-boot.${U_BOOT_EXT}"
 
 #we need some native tools for deployment
 #DEPENDS_append = " imx-loader-native"
-DEPENDS_append = " p7zip-native"
+DEPENDS_append = " p7zip-native coreutils-native"
 #we need mkimage to produce the U-Boot scripts even if not building a uImage kernel
 DEPENDS_append = " virtual/bootloader u-boot-mkimage-native"
 
