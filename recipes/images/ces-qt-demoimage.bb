@@ -97,7 +97,7 @@ COPY_LIC_MANIFEST = "1"
 COPY_LIC_DIRS = "1"
 
 #create the file /etc/timestamp
-IMAGE_PREPROCESS_COMMAND = "rootfs_update_timestamp"
+IMAGE_POSTPROCESS_COMMAND = "rootfs_update_timestamp"
 
 #create the deployment directory-tree
 require recipes/images/christ-image-fstype.inc
