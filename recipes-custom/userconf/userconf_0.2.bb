@@ -25,6 +25,8 @@ FILES_${PN} = " ${sysconfdir}/systemd/network/wired0.network \
 		${sysconfdir}/systemd/network/wired1.network \
 		"
 
+DIRFILES = "1"
+
 # Prevents do_package failures with:
 # debugsources.list: No such file or directory:
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
