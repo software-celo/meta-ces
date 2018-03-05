@@ -61,7 +61,7 @@ IMAGE_INSTALL_append = " \
     util-linux-fstrim \
     evtest \
     hdparm \
-    iperf \
+    iperf3 \
     i2c-tools \
     ethtool \
     stress \
