@@ -58,7 +58,6 @@ IMAGE_INSTALL_append = " \
     ${SOUND_PKGS_INSTALL} \
     u-boot-fw-utils \
     libusbg \
-    curl \
     file \
     aspell \
     e2fsprogs \
@@ -80,7 +79,7 @@ IMAGE_INSTALL_append = " \
     devmem2 \
     evtest \
     hdparm \
-    iperf \
+    iperf3 \
     i2c-tools \
     memtester \
     lmbench \
