@@ -68,6 +68,7 @@ IMAGE_INSTALL_append = " \
     util-linux \
     systemd-bootcheck \
     getting-started \
+    chromium-autostart \
     chromium \
 "
 

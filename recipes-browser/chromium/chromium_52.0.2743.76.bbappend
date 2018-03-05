@@ -9,9 +9,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " file://google-chrome-kiosk.desktop \
-                   file://google-chrome-kiosk \
-                   file://browser.conf \
-                   file://chromium-autostart.service"
+                   file://google-chrome-kiosk"
 
 # Had to remove '--gpu-no-context-lost' in chromium 48 from extra args i.e. ignore-lost-context from
 # PACKAGECONFIG because it caused problems in at least one case. meta-freescale activates it, so leave
@@ -32,20 +30,10 @@ DEPENDS_remove = "libav "
 RDEPENDS_${PN} += " xinit libexif"
 
 do_install_append() {
-	install -d ${D}${systemd_unitdir}/system
-	install -d ${D}${sysconfdir}
-	install -d ${D}${sysconfdir}/systemd/system/graphical.target.wants
-	install -m 0644 ${WORKDIR}/chromium-autostart.service ${D}${systemd_unitdir}/system/chromium-autostart.service
-	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
-
 	install -Dm 0644 ${WORKDIR}/google-chrome-kiosk.desktop ${D}${datadir}/applications/google-chrome-kiosk.desktop
 	install -Dm 0755 ${WORKDIR}/google-chrome-kiosk ${D}${bindir}/google-chrome-kiosk
 
         sed -i "s/^CHROME_EXTRA_ARGS=\"\"/CHROME_EXTRA_ARGS=\"${CHROMIUM_EXTRA_ARGS}\"/" ${D}${bindir}/google-chrome-kiosk
-
-	# Do activate autostart by default
-	ln -sf ${systemd_unitdir}/system/chromium-autostart.service \
-		${D}${sysconfdir}/systemd/system/graphical.target.wants/chromium-autostart.service
 }
 
-FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}/browser.conf ${sysconfdir}/systemd/system/graphical.target.wants/chromium-autostart.service ${datadir}/applications/google-chrome-kiosk.desktop ${bindir}/google-chrome-kiosk"
+FILES_${PN} += "${datadir}/applications/google-chrome-kiosk.desktop ${bindir}/google-chrome-kiosk"
