@@ -7,6 +7,8 @@ U_BOOT_EXT_mx6 = "imx"
 U_BOOT_SYMLINK = "u-boot-${MACHINE}.${U_BOOT_EXT}"
 U_BOOT_BINARY = "u-boot.${U_BOOT_EXT}"
 
+CHRIST_UPDATE_CUSTOM_FILE ?= "${THISDIR}/custom.sh"
+
 #we need some native tools for deployment
 #DEPENDS_append = " imx-loader-native"
 DEPENDS_append = " p7zip-native coreutils-native"
@@ -48,9 +50,11 @@ fakeroot do_imagedeploy() {
 
     CUSTOM_FILE=""
     if ! [ "x" = "x${CHRIST_UPDATE_INCLUDE_CUSTOM}" ]; then
-	if [ -e "${CHRIST_UPDATE_INCLUDE_CUSTOM}" ]; then
-	    cp "${CHRIST_UPDATE_INCLUDE_CUSTOM}" ${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh
-            CUSTOM_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh"
+        if [ "1" = "${CHRIST_UPDATE_INCLUDE_CUSTOM}" ]; then
+            if [ -e "${CHRIST_UPDATE_CUSTOM_FILE}" ]; then
+                cp "${CHRIST_UPDATE_CUSTOM_FILE}" ${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh
+                CUSTOM_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh"
+            fi
         fi
     fi
 

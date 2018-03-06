@@ -9,9 +9,22 @@ inherit extrausers
 
 IMAGE_FEATURES += " package-management"
 
+# The following variables can be used to control the image
+# update via CURT.
+#
+# Set _INCLUDE_UBOOT to "1" in order to update the U-Boot.
+# Set _INCLUDE_CUSTOM to "1" in order to execute the
+# custom.sh script after the update process is ready.
+# Set _ONLY_CUSTOM to "1" in order to disable all other
+# update tasks and only run the custom.sh script.
+# Use _CUSTOM_FILE to specify a path to your custom.sh
+# script. Default is ${THISDIR}/custom.sh
+# -> meta-ces/recipes/images/custom.sh
+
 CHRIST_UPDATE_INCLUDE_UBOOT = "0"
-CHRIST_UPDATE_INCLUDE_CUSTOM = ""
+CHRIST_UPDATE_INCLUDE_CUSTOM = "0"
 CHRIST_UPDATE_ONLY_CUSTOM = "0"
+# CHRIST_UPDATE_CUSTOM_FILE = "${THISDIR}/custom.sh"
 
 IMAGE_LINGUAS = "de-de en-gb"
 
