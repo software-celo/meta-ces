@@ -34,15 +34,15 @@ IMAGE_INSTALL_append = " \
     openssl \
     openssl-misc \
     ca-certificates \
-    userconf \ 
+    userconf \
     nano \
     logrotate \
     liberation-fonts \
     tzdata \
     tzdata-misc \
-    tzdata-posix \ 
-    tzdata-right \ 
-    tzdata-europe \ 
+    tzdata-posix \
+    tzdata-right \
+    tzdata-europe \
     can-utils \
     libsocketcan \
     iproute2 \
@@ -68,7 +68,7 @@ IMAGE_INSTALL_append = " \
     util-linux \
     systemd-bootcheck \
     getting-started \
-    chromium \
+    chromium-x11 \
 "
 
 # Copy Licenses to image /usr/share/common-licenses
