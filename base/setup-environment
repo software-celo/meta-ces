@@ -58,7 +58,7 @@ Available Poky's distros: `echo; ls sources/poky/meta-poky/conf/distro/*.conf \
 Examples:
 
 - To create a new Yocto build directory:
-  $ MACHINE=pixi-cdl100 DISTRO=ces-framebuffer source $PROGNAME build
+  $ MACHINE=pixi-cdl100 DISTRO=ces-fb source $PROGNAME build
 
 - To use an existing Yocto build directory:
   $ source $PROGNAME build
