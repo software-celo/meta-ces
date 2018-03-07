@@ -82,6 +82,7 @@ IMAGE_INSTALL_append = " \
     systemd-bootcheck \
     getting-started \
     chromium-x11 \
+    chromium-autostart \
 "
 
 # Copy Licenses to image /usr/share/common-licenses
