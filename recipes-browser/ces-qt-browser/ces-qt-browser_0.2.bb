@@ -4,30 +4,27 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
 inherit qmake5
 
-#PV = "1.1+gitr${SRCPV}"
-#SRCREV = "${AUTOREV}"
-#SRCBRANCH = "master"
-#SRC_URI = "git:///path/to/repo;protocol=file;branch=${SRCBRANCH}"
-#S = "${WORKDIR}/git"
+FILESEXTRAPATHS_prepend := "${THISDIR}/ces-qt-browser:"
 
-PV = "0.1"
+PV = "0.2+gitr${SRCPV}"
 
-S = "${WORKDIR}/minimal-browser"
+S = "${WORKDIR}/git"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/minimal-browser:"
+SRCREV = "daec321533f001a07ec872e3c77598a11413f6d2"
+SRCBRANCH = "ces-qt-browser"
 
-SRC_URI = "file://minimal-browser_0.1.tgz \
-           file://minimal-browser.service \
+SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH} \
+           file://qtbrowser-autostart.service \
            file://browser.conf"
 
 do_install_append() {
 	install -d ${D}${systemd_unitdir}/system
 	install -d ${D}${sysconfdir}
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
-	install -m 0644 ${WORKDIR}/minimal-browser.service ${D}${systemd_unitdir}/system/minimal-browser.service
+	install -m 0644 ${WORKDIR}/qtbrowser-autostart.service ${D}${systemd_unitdir}/system/qtbrowser-autostart.service
 
-	ln -sf ${systemd_unitdir}/system/minimal-browser.service \
-		${D}${sysconfdir}/systemd/system/multi-user.target.wants/minimal-browser.service
+	ln -sf ${systemd_unitdir}/system/qtbrowser-autostart.service \
+		${D}${sysconfdir}/systemd/system/multi-user.target.wants/qtbrowser-autostart.service
 
 	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
 }

@@ -1,4 +1,4 @@
-SUMMARY = "Image booting a qt5 minimal-browser"
+SUMMARY = "Image booting a minimal qt5 browser"
 
 LICENSE = "MIT"
 
@@ -64,7 +64,7 @@ IMAGE_INSTALL_append = " \
     tzdata-posix \ 
     tzdata-right \ 
     tzdata-europe \ 
-    minimal-browser \
+    ces-qt-browser \
     can-utils \
     libsocketcan \
     iproute2 \
