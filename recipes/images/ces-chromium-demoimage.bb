@@ -107,6 +107,6 @@ SYSTEMD_DEFAULT_TARGET = "graphical.target"
 
 EXTRA_USERS_PARAMS = " usermod -P root123 root; "
 
-export IMAGE_BASENAME = "ces-x11-chromeimage"
+export IMAGE_BASENAME = "ces-chromium-demoimage"
 
 inherit image
