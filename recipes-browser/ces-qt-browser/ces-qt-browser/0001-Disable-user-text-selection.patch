@@ -1,0 +1,75 @@
+diff --git a/webset.js b/webset.js
+index 0eb1373..2e99130 100644
+--- a/webset.js
++++ b/webset.js
+@@ -17,6 +17,7 @@ function webEngineConfig(webengine,webEngineView){
+ 	*
+ 	*/
+ 
++
+ 	/*Set new profile settings for webengine*/
+ 	webengine.defaultProfile.httpCacheType = 2;             // No persistent cache
+ 	webengine.defaultProfile.persistentCookiesPolicy = 0;	// No Persistent cookies
+@@ -54,21 +55,41 @@ function javascriptDialogHandler(request){
+ 
+ function contextMenuHandler(request){
+ 	/* "Disable" context menu*/
+-	request.accepted = true;
++    request.accepted = true;
++}
++
++
++/*Description:
++*
++* By default, this function injects a smart piece of code to a loaded html page,
++* and disable the text selection on this page
++*
++*/
++function disableTextSelection(){
++    wev.runJavaScript("var head = document.head;" +
++                      "var node= document.createElement('style');" +
++                      "var textnode = document.createTextNode('body {-webkit-user-select: none !important;}');" +
++                      "node.appendChild(textnode);head.appendChild(node);"
++                     ,function(){/*Empty function for callback*/})
+ }
+ 
+ function errorPageHandler(loadRequest){
+ 	switch(loadRequest.status){
+-		case 0:{
+-			//console.log("Load started");
++        case 0 /*Load started*/: {
++
+ 			break;
+ 		}
+-		case 1:{
+-			//console.log("Load stopped");
++        case 1 /*Load stopped*/: {
++
+ 			break;
+ 		}
+-		case 2:{
+-			//console.log("Load succeded");
++        case 2 /*Load success*/: {
++
++            /*Adds -webkit-user-select: none to loaded html to disable the textselection*/
++
++            disableTextSelection();
++
++
+ 			break;
+ 		}
+ 		case 3:{
+@@ -79,12 +100,11 @@ function errorPageHandler(loadRequest){
+ 			console.log("ErrorCode:" + loadRequest.errorCode);
+ 			console.log("Requested URL:" + loadRequest.url);
+ 			/*Open standard error page*/
+-			//webEngineView.url = "file:///ErrorLandingPage/error.html";
+ 			console.log("Go to Errorpage:" + errorpagepath);
+ 			wev.url = errorpagepath +"?edomain=" +loadRequest.errorDomain+"&ecode=" +loadRequest.errorCode ;
+ 			break;
+ 		}
+-		default:{
++        default: /*Should not appear!*/{
+ 		}
+ 	}
+ }
