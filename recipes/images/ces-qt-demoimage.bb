@@ -20,11 +20,20 @@ IMAGE_FEATURES += " package-management"
 # Use _CUSTOM_FILE to specify a path to your custom.sh
 # script. Default is ${THISDIR}/custom.sh
 # -> meta-ces/recipes/images/custom.sh
+# Set _INCLUDE_CCLIB to "1" in order to override curt
+# internal functions. There are some pitfalls you have to
+# consider when using this. Please contact us if you want
+# to use these functions.
+# Use _CCLIB_FILE to specify a path to your cclib.sh
+# script. Default is ${THISDIR}/cclib.sh
+# -> meta-ces/recipes/images/cclib.sh
 
 CHRIST_UPDATE_INCLUDE_UBOOT = "0"
 CHRIST_UPDATE_INCLUDE_CUSTOM = "0"
 CHRIST_UPDATE_ONLY_CUSTOM = "0"
 # CHRIST_UPDATE_CUSTOM_FILE = "${THISDIR}/custom.sh"
+CHRIST_UPDATE_INCLUDE_CCLIB = "0"
+# CHRIST_UPDATE_CCLIB_FILE = "${THISDIR}/cclib.sh"
 
 IMAGE_LINGUAS = "de-de en-gb"
 
