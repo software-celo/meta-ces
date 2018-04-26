@@ -1,0 +1,7 @@
+#!/bin/sh
+echo 0 > /sys/block/mmcblk3boot0/force_ro
+/sbin/fw_setenv run_update 1
+RET=$?
+sync
+echo 1 > /sys/block/mmcblk3boot0/force_ro
+exit $RET
