@@ -23,12 +23,12 @@ SRC_URI = " \
 do_install_append () {
 
     install -d ${D}${systemd_unitdir}/system
-    install -d ${D}${sysconfdir}/systemd/system/basic.target.wants
+    install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
     install -m 0644 ${WORKDIR}/fastconfig.service ${D}${systemd_unitdir}/system/fastconfig.service
     install -m 0644 ${WORKDIR}/fast.conf ${D}${sysconfdir}/fast.conf
 
     ln -sf ${systemd_unitdir}/system/fastconfig.service \
-        ${D}${sysconfdir}/systemd/system/basic.target.wants/fastconfig.service
+        ${D}${sysconfdir}/systemd/system/multi-user.target.wants/fastconfig.service
 }
 
 DEPENDS += "systemd qtquick1 qtdeclarative"
