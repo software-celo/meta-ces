@@ -1,0 +1,12 @@
+[Unit]
+Description=lightweight settings app
+Wants=qtbrowser-autostart.service
+
+[Service]
+EnvironmentFile=/etc/fast.conf
+ExecStart=/usr/sbin/fastConfig
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target
