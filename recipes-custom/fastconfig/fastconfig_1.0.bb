@@ -11,7 +11,7 @@ S = "${WORKDIR}/git"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/fastconfig:"
 
-SRCREV = "df6c2cda49067b25c39b0ff11fd44cd215832075"
+SRCREV = "ab4d192a019e90424dc1e36e7f7159a91f109658"
 SRCBRANCH = "master"
 
 SRC_URI = " \
