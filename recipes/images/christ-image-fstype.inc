@@ -9,6 +9,7 @@ U_BOOT_BINARY = "u-boot.${U_BOOT_EXT}"
 
 CHRIST_UPDATE_CUSTOM_FILE ?= "${THISDIR}/custom.sh"
 CHRIST_UPDATE_CCLIB_FILE ?= "${THISDIR}/cclib.sh"
+CHRIST_UPDATE_ADD_FILES ?= ""
 
 #we need some native tools for deployment
 #DEPENDS_append = " imx-loader-native"
@@ -75,9 +76,11 @@ fakeroot do_imagedeploy() {
 	ONLY_CUSTOM_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/ONLY_CUSTOM"
     fi
 
+    CUSTOM_ADD_FILES=${CHRIST_UPDATE_ADD_FILES}
+
     7z a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-${PV}.7z ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE} \
         ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.tar.bz2 ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums \
-        ${NO_UBOOT_FILE} ${CUSTOM_FILE} ${ONLY_CUSTOM_FILE} ${CCLIB_FILE}
+        ${NO_UBOOT_FILE} ${CUSTOM_FILE} ${ONLY_CUSTOM_FILE} ${CCLIB_FILE} ${CUSTOM_ADD_FILES}
 
 }
 
