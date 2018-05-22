@@ -1,0 +1,13 @@
+diff --git a/src/virtualkeyboard/content/styles/default/style.qml b/src/virtualkeyboard/content/styles/default/style.qml
+index 1440f00..87881a5 100644
+--- a/src/virtualkeyboard/content/styles/default/style.qml
++++ b/src/virtualkeyboard/content/styles/default/style.qml
+@@ -882,7 +882,7 @@ KeyboardStyle {
+         NumberAnimation { property: "opacity"; to: 0; duration: 200 }
+     }
+ 
+-    languagePopupListEnabled: true
++    languagePopupListEnabled: false
+ 
+     languageListDelegate: SelectionListItem {
+         id: languageListItem
