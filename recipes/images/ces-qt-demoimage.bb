@@ -115,6 +115,7 @@ IMAGE_INSTALL_append = " \
     util-linux \
     systemd-bootcheck \
     getting-started \
+    enable-update \
 "
 
 # Copy Licenses to image /usr/share/common-licenses
