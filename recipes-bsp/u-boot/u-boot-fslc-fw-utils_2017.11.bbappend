@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/u-boot-fslc:"
 
-SRCREV = "7a380b3216ef9df5d0112e621878f95e3a93ba59"
+SRCREV = "e515ca338bd6d0b968b853135f0c9b33add998fb"
 SRCBRANCH ="ces-rocko-2017.11+fslc"
 PV = "v2017.11+git${SRCPV}"
 
