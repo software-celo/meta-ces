@@ -5,7 +5,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-fslc-imx:"
 
 SRCBRANCH = "ces-rocko-4.1-2.0.x-imx"
-SRCREV = "69454db2076c160e03c31b21c3f2cf3a21380909"
+SRCREV = "5ff942f01d55e6af543f5de666b1e1b24cf0dd8d"
 SRC_URI = "git://github.com/software-celo/linux-fslc.git;branch=${SRCBRANCH} \
            file://0001-bootlogo-align-center.patch \
            file://defconfig \
