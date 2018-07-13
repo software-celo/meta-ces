@@ -10,19 +10,16 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <link rel="stylesheet" type="text/css" href="index.css">
-        <script defer src="/static/fontawesome/fontawesome-all.js"></script>
     </head>
     <body>
-        <div class="errorbox" align="center">
-                <div class="tuxedo_tl">
-                    <img src="Tux.png" alt="linux_tux" height="150" width="110">
-                </div>
-                <div class="christ_tr">
-                    <img src="header_r.png" alt="christ_r" height="150" width="400">
-                </div>
-                <div class="textbox">
-                    <p>An error occured</p>
-                </div>
-        </div>
+	<div class="errorbox" align="center">
+		<div class="textbox" style="color:black; font-weight: bold">
+			<p id="errordomain">An error occured</p>
+			<p>Errorcode: <b id="errorcode"></b></p>
+		</div>
+		<script src="erlfunc.js">
+			checkURLerrs();
+		</script>
+	</div>
     </body>
 </html>

@@ -1,37 +1,16 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/*
-    Created on : 20.02.2018, 10:47:32
-    Author     : root
-*/
-
-
-
 .body{
    min-height: 480px;
    max-height: 800px;
    min-width: 800px;
    max-width: 1280px;
    overflow: hidden;
+   font-family: "system";
 }
-
-.tuxedo_tl{
-    position:absolute;
-    top: 10px;
-    right: 10px;
-}
-.christ_tr{
-    position:absolute;
-    top: 10px;
-    left: 10px;
-}
-
 
 .errorbox{
-    padding-top: 25%;
+    display: flex;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
 }
 
 .textbox{
@@ -39,35 +18,3 @@ and open the template in the editor.
     font-style: bold;
 }
 
-.btn_container{
-    padding-top: 10px;
-}
-
-.flex_btn {
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.reload_btn{
-    width: 120px;
-    height: 50px;
-    color: white;
-    font-size: 20px;
-    border: 2px solid  black;
-    font-weight: bold;
-    background-color: #3A78A1;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
-}
-
-.error_btn{
-    width: 120px;
-    height: 50px;
-    color: white;
-    font-size: 20px;
-    border: 2px solid  black;
-    font-weight: bold;
-    background-color: red;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
-}

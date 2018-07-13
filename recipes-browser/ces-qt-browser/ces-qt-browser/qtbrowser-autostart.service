@@ -3,7 +3,7 @@ Description=minimal qt5 webengine browser app
 
 [Service]
 EnvironmentFile=/etc/browser.conf
-ExecStart=/usr/sbin/ces-qt-browser -platform eglfs --log-level=0 $START_URL
+ExecStart=/usr/sbin/ces-qt-browser --log-level=0 $START_URL
 Restart=on-failure
 RestartSec=1
 

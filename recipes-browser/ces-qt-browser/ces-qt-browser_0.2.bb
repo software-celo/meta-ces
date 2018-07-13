@@ -6,25 +6,24 @@ inherit qmake5
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/ces-qt-browser:"
 
-PV = "0.2+gitr${SRCPV}"
+PV = "2.0+gitr${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "0eb8117efb4c1e35c3defe852eb65a574d73c8be"
+SRCREV = "cc09fb44341563af48a8a8593ffd21a58cf7ac1c"
 SRCBRANCH = "ces-qt-browser"
 
 SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH} \
 	   file://qtbrowser-autostart.service \
 	   file://browser.conf \
 	   file://error.html \
-	   file://header_r.png \
 	   file://index.css \
-	   file://Tux.png \
+	   file://erlfunc.js \
+	   file://ces.conf \
 "
 
 # Systempath for error landing page
-ERL_PATH = "${datadir}/minimalbrowser/erl"
-
+ERL_PATH = "${datadir}/ces-qt-browser/erl"
 
 
 do_install_append() {
@@ -37,6 +36,7 @@ do_install_append() {
 		${D}${sysconfdir}/systemd/system/multi-user.target.wants/qtbrowser-autostart.service
 
 	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
+	install -m 0644 ${WORKDIR}/ces.conf ${D}${sysconfdir}/ces.conf
 
 	inst_erldir
 	inst_erlpage
@@ -55,9 +55,8 @@ inst_erldir() {
 inst_erlpage() {
 	echo "Install standard error landing page"
         install -m 0644 ${WORKDIR}/error.html ${D}${ERL_PATH}/error.html
-	install -m 0644 ${WORKDIR}/header_r.png ${D}${ERL_PATH}/header_r.png
 	install -m 0644 ${WORKDIR}/index.css ${D}${ERL_PATH}/index.css
-	install -m 0644 ${WORKDIR}/Tux.png ${D}${ERL_PATH}/Tux.png
+	install -m 0644 ${WORKDIR}/erlfunc.js ${D}${ERL_PATH}/erlfunc.js
 }
 
 
