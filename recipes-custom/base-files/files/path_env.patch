@@ -1,0 +1,18 @@
+diff --git a/profile b/profile
+index a062028..4cefdcb 100644
+--- a/profile
++++ b/profile
+@@ -1,12 +1,10 @@
+ # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
+ # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
+ 
+-PATH="/usr/local/bin:/usr/bin:/bin"
++PATH="/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:/usr/local/sbin"
+ EDITOR="vi"			# needed for packages like cron, git-commit
+ [ "$TERM" ] || TERM="vt100"	# Basic terminal capab. For screen etc.
+ 
+-# Add /sbin & co to $PATH for the root user
+-[ "$HOME" != "ROOTHOME" ] || PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
+ 
+ # Set the prompt for bash and ash (no other shells known to be in use here)
+ [ -z "$PS1" ] || PS1='\u@\h:\w\$ '
