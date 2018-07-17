@@ -1,0 +1,8 @@
+[Added Associations]
+text/plain=gedit.desktop;
+application/x-desktop=gedit.desktop;
+text/x-scheme=gedit.desktop;
+application/xml=gedit.desktop;
+text/x-log=gedit.desktop;
+image/png=gpicview.desktop;
+
