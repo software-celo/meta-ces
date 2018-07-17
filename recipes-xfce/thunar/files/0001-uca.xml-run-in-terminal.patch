@@ -1,0 +1,17 @@
+--- Thunar-1.6.12/plugins/thunar-uca/uca.xml.in.org	2018-05-24 15:11:21.749985886 +0200
++++ Thunar-1.6.12/plugins/thunar-uca/uca.xml.in	2018-05-24 15:12:26.947302246 +0200
+@@ -44,5 +44,14 @@
+     <startup-notify/>
+     <directories/>
+   </action>
++  <action>
++    <icon>utilities-terminal</icon>
++    <name>Run in Terminal</name>
++    <unique-id>1527153206380064-2</unique-id>
++    <command>xfce4-terminal -e %f --hold</command>
++    <description>Run in Terminal</description>
++    <patterns>*.sh</patterns>
++    <other-files/>
++  </action>
+ 
+ </actions>

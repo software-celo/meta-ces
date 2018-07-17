@@ -1,0 +1,8 @@
+--- exo-0.11.5/exo-helper/helpers/helpers.rc.org	2017-03-02 02:56:00.000000000 +0100
++++ exo-0.11.5/exo-helper/helpers/helpers.rc	2018-06-18 10:44:39.802553012 +0200
+@@ -7,4 +7,4 @@
+ WebBrowser=firefox
+ MailReader=thunderbird
+ TerminalEmulator=xfce4-terminal
+-FileManager=Thunar
++FileManager=pcmanfm

@@ -1,0 +1,15 @@
+diff --git a/xfsettingsd/xsettings.xml b/xfsettingsd/xsettings.xml
+index 66dd4af..63e3133 100644
+--- a/xfsettingsd/xsettings.xml
++++ b/xfsettingsd/xsettings.xml
+@@ -3,8 +3,8 @@
+   <property name="Net" type="empty">
+     <property name="ThemeName" type="string" value="Xfce"/>
+     <property name="IconThemeName" type="string" value="Adwaita"/>
+-    <property name="DoubleClickTime" type="int" value="400"/>
+-    <property name="DoubleClickDistance" type="int" value="5"/>
++    <property name="DoubleClickTime" type="int" value="935"/>
++    <property name="DoubleClickDistance" type="int" value="17"/>
+     <property name="DndDragThreshold" type="int" value="8"/>
+     <property name="CursorBlink" type="bool" value="true"/>
+     <property name="CursorBlinkTime" type="int" value="1200"/>
