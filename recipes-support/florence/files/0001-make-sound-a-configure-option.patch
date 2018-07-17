@@ -1,0 +1,154 @@
+From ec1ede35d043cbbe33a40aa8e0e9901a507f4328 Mon Sep 17 00:00:00 2001
+From: Max Krummenacher <max.krummenacher@toradex.com>
+Date: Thu, 23 Jun 2016 20:12:25 +0200
+Subject: [PATCH] make sound a configure option
+
+add a --without-sound switch which builds without soundeffect and
+drops the dependency on gstreamer 0.10
+
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+---
+ configure.ac    |  9 ++++++++-
+ src/Makefile.am |  4 ++--
+ src/main.c      |  4 ++++
+ src/style.c     | 15 ++++++++++++++-
+ 4 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8629509..a147ed3 100755
+--- a/configure.ac
++++ b/configure.ac
+@@ -11,6 +11,8 @@ AC_ARG_WITH([xtst], AS_HELP_STRING([--without-xtst], [Build without Xtst extensi
+ AM_CONDITIONAL([WITH_XTST], [test "x$with_xtst" != "xno"])
+ AC_ARG_WITH([xrecord], AS_HELP_STRING([--without-xrecord], [Build without XRecord extension (requires the Xtst extension) (default: enabled)]))
+ AM_CONDITIONAL([WITH_XRECORD], [test "x$with_xrecord" != "xno" -a "x$with_xtst" != "xno"])
++AC_ARG_WITH([sound], AS_HELP_STRING([--without-sound], [Build without sound extension (default: enabled)]))
++AM_CONDITIONAL([WITH_SOUND], [test "x$with_sound" != "xno"])
+ AC_ARG_WITH([at-spi], AS_HELP_STRING([--without-at-spi], [Build without at-spi(default: enabled)]))
+ AM_CONDITIONAL([WITH_AT_SPI], [test "x$with_at_spi" != "xno"])
+ AC_ARG_WITH([panelapplet], AS_HELP_STRING([--without-panelapplet], [Build without libpanelapplet(default: enabled)]))
+@@ -61,7 +63,7 @@ if test "x$with_docs" != "xno"; then
+ fi
+ 
+ # Checks for libraries.
+-DEP_MODULES="x11 gmodule-2.0 cairo librsvg-2.0 libxml-2.0 gconf-2.0 gtk+-2.0 >= 2.12.0 gstreamer-0.10"
++DEP_MODULES="x11 gmodule-2.0 cairo librsvg-2.0 libxml-2.0 gconf-2.0 gtk+-2.0 >= 2.12.0"
+ PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
+ 
+ if test "x$with_docs" != "xno"; then
+@@ -84,6 +86,9 @@ if test "x$with_xtst" != "xno"; then
+ 		AC_DEFINE(ENABLE_XRECORD, ["xrecord"], [xrecord extension is enabled])
+ 	fi
+ fi
++if test "x$with_sound" != "xno"; then
++	PKG_CHECK_MODULES([SOUND], gstreamer-0.10, AC_DEFINE([ENABLE_SOUND], [], [Sound enabled.]), AC_MSG_ERROR(Could not configure gstreamer 0.10. Please either install gstreamer 0.10 or disable sound: --without-sound configure option))
++fi
+ if test "x$with_at_spi" != "xno"; then
+ 	PKG_CHECK_MODULES([AT_SPI2], [atspi-2], AC_DEFINE([ENABLE_AT_SPI2], [], [dbus at-spi enabled.]), [at_spi2=x])
+ 	if test "x$at_spi2" = "xx"; then
+@@ -116,6 +121,8 @@ AC_SUBST(LIBPANELAPPLET_CFLAGS)
+ AC_SUBST(LIBPANELAPPLET_LIBS)
+ AC_SUBST(XTST_CFLAGS)
+ AC_SUBST(XTST_LIBS)
++AC_SUBST(SOUND_CFLAGS)
++AC_SUBST(SOUND_LIBS)
+ AC_SUBST(AT_SPI2_CFLAGS)
+ AC_SUBST(AT_SPI2_LIBS)
+ AC_SUBST(AT_SPI_CFLAGS)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 586d6a2..6af8772 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -15,8 +15,8 @@ endif
+ 
+ florence_CPPFLAGS = -DICONDIR="\"$(ICONDIR)\""\
+    -DDATADIR="\"$(datadir)/florence\"" $(DEPS_CFLAGS)\
+-   $(LIBGNOME_CFLAGS) $(LIBNOTIFY_CFLAGS) $(XTST_CFLAGS) $(AT_SPI_CFLAGS) $(AT_SPI2_CFLAGS) $(INCLUDES)
+-florence_LDADD = $(DEPS_LIBS) $(LIBM) $(X11_LIBS) $(LIBGNOME_LIBS) $(LIBNOTIFY_LIBS) $(XTST_LIBS) $(AT_SPI2_LIBS) $(AT_SPI_LIBS)
++   $(LIBGNOME_CFLAGS) $(LIBNOTIFY_CFLAGS) $(XTST_CFLAGS) $(SOUND_CFLAGS) $(AT_SPI_CFLAGS) $(AT_SPI2_CFLAGS) $(INCLUDES)
++florence_LDADD = $(DEPS_LIBS) $(LIBM) $(X11_LIBS) $(LIBGNOME_LIBS) $(LIBNOTIFY_LIBS) $(XTST_LIBS) $(SOUND_LIBS) $(AT_SPI2_LIBS) $(AT_SPI_LIBS)
+ 
+ if WITH_PANELAPPLET
+ 
+diff --git a/src/main.c b/src/main.c
+index 6134c2a..180585d 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -23,7 +23,9 @@
+ #include <sys/types.h>
+ #include <getopt.h>
+ #include <gtk/gtk.h>
++#ifdef ENABLE_SOUND
+ #include <gst/gst.h>
++#endif
+ #include <gconf/gconf-client.h>
+ #include "system.h"
+ #include "trace.h"
+@@ -72,7 +74,9 @@ int main (int argc, char **argv)
+ 	gtk_init(&argc, &argv);
+ 	gconf_init(argc, argv, NULL);
+ 	g_type_init();
++#ifdef ENABLE_SOUND
+ 	gst_init(&argc, &argv);
++#endif
+ 
+ 	program_name=argv[0];
+ 	config=decode_switches (argc, argv);
+diff --git a/src/style.c b/src/style.c
+index 2a81d01..8d31976 100644
+--- a/src/style.c
++++ b/src/style.c
+@@ -27,8 +27,10 @@
+ #include <libxml/parser.h>
+ #include <libxml/tree.h>
+ #include <libxml/xmlsave.h>
+-#include <gst/gst.h>
+ #include "system.h"
++#ifdef ENABLE_SOUND
++#include <gst/gst.h>
++#endif
+ #include "trace.h"
+ #include "key.h"
+ #include "style.h"
+@@ -562,6 +564,7 @@ GdkPixbuf *style_pixbuf_draw(struct style *style)
+ }
+ 
+ /* Liberate the pipeline */
++#ifdef ENABLE_SOUND
+ void style_sound_pipeline_free(GstElement *pipeline)
+ {
+ 	START_FUNC
+@@ -675,6 +678,14 @@ void style_sound_play(struct style *style, const gchar *match, enum style_sound_
+ 	}
+ 	END_FUNC
+ }
++#else
++void style_sound_free(gpointer data, gpointer userdata)
++{
++}
++void style_sound_play(struct style *style, const gchar *match, enum style_sound_type type)
++{
++}
++#endif
+ 
+ /* create a new style from the layout file */
+ struct style *style_new(gchar *base_uri)
+@@ -711,6 +722,7 @@ struct style *style_new(gchar *base_uri)
+ 		}
+ 	}
+ 
++#ifdef ENABLE_SOUND
+ 	layoutreader_reset(layout);
+ 	layoutreader_element_open(layout, "style");
+ 	if (layoutreader_element_open(layout, "sounds")) {
+@@ -719,6 +731,7 @@ struct style *style_new(gchar *base_uri)
+ 			layoutreader_sound_free(sound);
+ 		}
+ 	}
++#endif
+ 
+ 	layoutreader_free(layout);
+ 	if (!base_uri) g_free(uri);
+-- 
+2.6.6
+
