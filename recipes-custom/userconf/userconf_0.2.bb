@@ -9,7 +9,7 @@ SRC_URI = "file://wired0.network \
 
 S = "${WORKDIR}/"
 
-FILESEXTRAPATHS_prepend = "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 do_install () {
 
