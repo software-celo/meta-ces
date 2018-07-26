@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+Copyright:	 Christ Electronic Systems GmbH  2017-2018
+Author: 	 Steffen Kothe <skothe@christ-es.de>
 -->
 <html>
     <head>
@@ -10,16 +9,14 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <link rel="stylesheet" type="text/css" href="index.css">
+	<script src="erlfunc.js"></script>
     </head>
-    <body>
+    <body onload="checkURLerrs();">
 	<div class="errorbox" align="center">
 		<div class="textbox" style="color:black; font-weight: bold">
 			<p id="errordomain">An error occured</p>
 			<p>Errorcode: <b id="errorcode"></b></p>
 		</div>
-		<script src="erlfunc.js">
-			checkURLerrs();
-		</script>
 	</div>
     </body>
 </html>
