@@ -1,0 +1,11 @@
+--- libfm-1.2.5/data/libfm.conf.orig	2016-02-20 01:02:10.000000000 +0100
++++ libfm-1.2.5/data/libfm.conf	2018-06-19 14:15:25.673255889 +0200
+@@ -7,7 +7,7 @@
+ 
+ [ui]
+ big_icon_size=48
+-small_icon_size=24
++small_icon_size=48
+ thumbnail_size=128
+ pane_icon_size=24
+ show_thumbnail=1

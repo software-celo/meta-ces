@@ -1,0 +1,10 @@
+[Unit]
+Description=usb mountpoint checker
+
+[Service]
+ExecStart=/usr/sbin/usbmountpoints.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
