@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f38b3d1c7ef7fc2c8b6d20cd38efdc29"
 DEPENDS = "udev"
 
 SRC_URI = "https://pcsclite.apdu.fr/files/pcsc-lite-${PV}.tar.bz2"
-SRC_URI[md5sum] = "0ec103b1ef298d0c58d6ef6b00b9cf17"
-SRC_URI[sha256sum] = "6a358f61ed3b66a7f6e1f4e794a94c7be4c81b7a58ec360c33791e8d7d9bd405"
+SRC_URI[md5sum] = "3ba4b45456a500b5f1f22bf56a2dee38"
+SRC_URI[sha256sum] = "5a27262586eff39cfd5c19aadc8891dd71c0818d3d629539bd631b958be689c9"
 
 
 inherit autotools systemd pkgconfig
