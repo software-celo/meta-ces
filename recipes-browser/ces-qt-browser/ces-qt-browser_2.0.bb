@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH}
 	   file://index.css \
 	   file://erlfunc.js \
 	   file://ces.conf \
+	   file://ces-qtbrowser.desktop \
 "
 
 # Systempath for error landing page
@@ -32,11 +33,21 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
 	install -m 0644 ${WORKDIR}/qtbrowser-autostart.service ${D}${systemd_unitdir}/system/qtbrowser-autostart.service
 
-	ln -sf ${systemd_unitdir}/system/qtbrowser-autostart.service \
-		${D}${sysconfdir}/systemd/system/multi-user.target.wants/qtbrowser-autostart.service
-
 	install -m 0644 ${WORKDIR}/browser.conf ${D}${sysconfdir}/browser.conf
 	install -m 0644 ${WORKDIR}/ces.conf ${D}${sysconfdir}/ces.conf
+
+	# Install ces-qtbrowser.desktop file if x11 is set in DISTRO_FEATURE
+	# and replace QT_QPA_PLATFORM=eglfs with xcb in browser.conf.
+	# Enable systemd service if x11 is not set in DISTRO_FEATURE.
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','x11','true','false',d)}; then
+		install -d ${D}${datadir}/applications
+		install -m 0644 ${WORKDIR}/ces-qtbrowser.desktop ${D}${datadir}/applications/ces-qtbrowser.desktop
+		sed -i 's/eglfs/xcb/g' ${D}${sysconfdir}/browser.conf
+	else
+		ln -sf ${systemd_unitdir}/system/qtbrowser-autostart.service \
+			${D}${sysconfdir}/systemd/system/multi-user.target.wants/qtbrowser-autostart.service
+	fi
 
 	inst_erldir
 	inst_erlpage
@@ -58,7 +69,6 @@ inst_erlpage() {
 	install -m 0644 ${WORKDIR}/index.css ${D}${ERL_PATH}/index.css
 	install -m 0644 ${WORKDIR}/erlfunc.js ${D}${ERL_PATH}/erlfunc.js
 }
-
 
 
 DEPENDS += "qtwebengine systemd qtquick1 qtdeclarative"
