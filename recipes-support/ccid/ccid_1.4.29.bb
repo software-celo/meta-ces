@@ -10,8 +10,8 @@ SRC_URI = "https://ccid.apdu.fr/files/ccid-${PV}.tar.bz2 \
     file://no-dep-on-libfl.patch \
 "
 
-SRC_URI[md5sum] = "915a03cda85b60fefbe3654cbdc68ca9"
-SRC_URI[sha256sum] = "62cb73c6c009c9799c526f05a05e25f00f0ad86d50f82a714dedcfbf4a7e4176"
+SRC_URI[md5sum] = "899bce5ff791128cda6f854318cde547"
+SRC_URI[sha256sum] = "a5432ae845730493c04e59304b5c0c6103cd0e2c8827df57d69469a3eaaab84d"
 
 inherit autotools pkgconfig
 
