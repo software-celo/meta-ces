@@ -1,0 +1,16 @@
+diff --git a/data/xfce/xfce-applications.menu b/data/xfce/xfce-applications.menu
+index 29ba2c7..3f2102b 100644
+--- a/data/xfce/xfce-applications.menu
++++ b/data/xfce/xfce-applications.menu
+@@ -163,4 +163,11 @@
+         </Include>
+     </Menu>
+ 
++    <Exclude>
++        <Or>
++            <Filename>exo-web-browser.desktop</Filename>
++            <Filename>exo-mail-reader.desktop</Filename>
++        </Or>
++    </Exclude>
++
+ </Menu>
