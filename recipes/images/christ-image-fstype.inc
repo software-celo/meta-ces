@@ -35,10 +35,6 @@ fakeroot do_imagedeploy() {
     cp -pP ${DEPLOY_DIR_IMAGE}/u-boot* ${IMAGE_ROOTFS}/../${MACHINE}_bin/
     mv ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_SYMLINK} ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY}
 
-#    add the rootfs version to the welcome banner
-#    echo "${IMAGE_NAME}${PV}_${DATE}" >> ${IMAGE_ROOTFS}/etc/issue
-#    echo "" >> ${IMAGE_ROOTFS}/etc/issue
-
     sha1sum ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE} ${IMAGE_ROOTFS}/../${MACHINE}_bin/${U_BOOT_BINARY} \
         ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.tar.bz2 > ${IMAGE_ROOTFS}/../${MACHINE}_bin/sha1sums
 
