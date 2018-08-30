@@ -1,0 +1,88 @@
+From 4f54e0b358a3ef0472b5bdfdad9362b5a0427034 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Wed, 29 Aug 2018 16:09:27 +0200
+Subject: [PATCH] pcsc-perl: fix incorrect perl shebang with /usr/bin/env perl
+
+---
+ Card/t/test.t              | 2 +-
+ examples/gsm_directory.pl  | 2 +-
+ examples/test_iso_error.pl | 2 +-
+ t/test.t                   | 2 +-
+ test.pl                    | 2 +-
+ test/multiple_readers.pl   | 2 +-
+ test/single_reader.pl      | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Card/t/test.t b/Card/t/test.t
+index d42a4ae..837ab34 100755
+--- a/Card/t/test.t
++++ b/Card/t/test.t
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    test.pl: simple sample program based on test.pl to test the pcsc
+ #    Perl wrapper under Test::Harness
+diff --git a/examples/gsm_directory.pl b/examples/gsm_directory.pl
+index cd02e27..10315c6 100755
+--- a/examples/gsm_directory.pl
++++ b/examples/gsm_directory.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ 
+ #    This program reads the phone directory of a GSM11.11 SIM card and
+diff --git a/examples/test_iso_error.pl b/examples/test_iso_error.pl
+index 959759e..9b6ba2f 100755
+--- a/examples/test_iso_error.pl
++++ b/examples/test_iso_error.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    test_iso_error.pl: simple program to test the pcsc Perl wrapper
+ #    Copyright (C) 2003 Ludovic Rousseau
+diff --git a/t/test.t b/t/test.t
+index 8d68c15..3e45115 100755
+--- a/t/test.t
++++ b/t/test.t
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    test.pl: simple sample program based on test.pl to test the pcsc
+ #    Perl wrapper under Test::Harness
+diff --git a/test.pl b/test.pl
+index 200f672..c041281 100755
+--- a/test.pl
++++ b/test.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    test.pl: simple sample program to test the PCSC Perl wrapper
+ #    Copyright (C) 2001  Lionel Victor, 2003,2006 Ludovic Rousseau
+diff --git a/test/multiple_readers.pl b/test/multiple_readers.pl
+index b2256a1..2bb7d00 100755
+--- a/test/multiple_readers.pl
++++ b/test/multiple_readers.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    multiple_readers.pl: test the pcsc Perl wrapper with TWO readers
+ #    Copyright (C) 2001  Lionel Victor, 2003 Ludovic Rousseau
+diff --git a/test/single_reader.pl b/test/single_reader.pl
+index 3c7b533..0210ba3 100755
+--- a/test/single_reader.pl
++++ b/test/single_reader.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#! /usr/bin/env perl
+ 
+ #    single_reader.pl: test the pcsc Perl wrapper with one reader
+ #    copyright (c) 2001 Lionel Victor, 2003 Ludovic Rousseau
+-- 
+2.7.4
+
