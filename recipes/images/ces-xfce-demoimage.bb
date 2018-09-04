@@ -114,6 +114,8 @@ IMAGE_INSTALL_append = " \
     gedit \
     vim \
     curl \
+    packagegroup-core-ssh-openssh \
+    openssh-sftp-server \
 "
 
 # Copy Licenses to image /usr/share/common-licenses
