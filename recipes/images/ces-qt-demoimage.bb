@@ -5,7 +5,7 @@ LICENSE = "MIT"
 PV = "V2.1"
 PR = "r0"
 
-inherit extrausers
+inherit image extrausers image-buildinfo
 
 IMAGE_FEATURES += " package-management"
 
@@ -113,6 +113,7 @@ IMAGE_INSTALL_append = " \
     ethtool \
     stress \
     util-linux \
+    sysinfo \
     systemd-bootcheck \
     getting-started \
     enable-update \
@@ -139,5 +140,3 @@ IMAGE_LOGIN_MANAGER = "busybox shadow"
 EXTRA_USERS_PARAMS = " usermod -P root123 root; "
 
 export IMAGE_BASENAME = "ces-qt-demoimage"
-
-inherit image
