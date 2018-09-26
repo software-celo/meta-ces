@@ -5,7 +5,7 @@ LICENSE = "MIT"
 PV = "V1.0"
 PR = "r0"
 
-inherit extrausers
+inherit image extrausers image-buildinfo
 
 IMAGE_FEATURES += " package-management"
 
@@ -90,6 +90,7 @@ IMAGE_INSTALL_append = " \
     ethtool \
     stress \
     util-linux \
+    sysinfo \
     systemd-bootcheck \
     getting-started \
     enable-update \
@@ -141,5 +142,3 @@ SYSTEMD_DEFAULT_TARGET = "graphical.target"
 EXTRA_USERS_PARAMS = " usermod -P root123 root; "
 
 export IMAGE_BASENAME = "ces-xfce-demoimage"
-
-inherit image
