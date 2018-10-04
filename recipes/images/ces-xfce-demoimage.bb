@@ -108,7 +108,6 @@ IMAGE_INSTALL_append = " \
     procps \
     mmc-utils \
     florence3 \
-    keyboard-touch \
     pcmanfm \
     gtk-theme-clearlooks \
     systemd-usbmountpoints \
