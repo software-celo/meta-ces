@@ -45,7 +45,7 @@ do_install () {
 # Set Destktop appearance from Xfce to Adwaita because of strange Menu bar of xfce4-terminal, taskbar
 # xsettings.xml set theme to Adwaita, icon theme Adwaita
 # xfce4-panel.xml set taskbar view
-# xfwm4.xml set two workspaces in tasktbar not std 4
+# xfwm4.xml set two workspaces in tasktbar not std 4, disable display compositing to prevent mouse cursor flickering
         install -m 0755 -d ${D}/home/root/.config/xfce4/xfconf/xfce-perchannel-xml
         install -m 0644 ${WORKDIR}/xsettings.xml ${D}/home/root/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
         install -m 0644 ${WORKDIR}/xfce4-panel.xml ${D}/home/root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
