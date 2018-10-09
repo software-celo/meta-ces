@@ -155,11 +155,20 @@ make_report(){
 
 	echo "--------------------------------------"
 	echo "-                                    -"
+	echo "-            Disk layout             -"
+	echo "-                                    -"
+	echo "--------------------------------------"
+	echo ""
+	fdisk -l
+	printf "\n\n"
+
+	echo "--------------------------------------"
+	echo "-                                    -"
 	echo "-            Opened ports            -"
 	echo "-                                    -"
 	echo "--------------------------------------"
 	echo ""
-	netstat -n -a -p
+	netstat -n -a
 	printf "\n\n"
 
 	echo "--------------------------------------"
@@ -231,53 +240,42 @@ make_report(){
 
 	echo "--------------------------------------"
 	echo "-                                    -"
-	echo "-             TrustFence             -"
+	echo "-             Fuses/OTP              -"
 	echo "-                                    -"
 	echo "--------------------------------------"
 	echo ""
 
-	if [ "$(($(cat /sys/fsl_otp/HW_OCOTP_CFG5) & 2))" != "0" ]; then
-		echo "Device status: [CLOSED]"
-	else
-		echo "Device status: [OPEN]"
-	fi
+	CFG4="$(cat /sys/fsl_otp/HW_OCOTP_CFG4)"
+	CFG5="$(cat /sys/fsl_otp/HW_OCOTP_CFG5)"
+	MAC0="$(cat /sys/fsl_otp/HW_OCOTP_MAC0 | \
+		sed -ne 's,^0x\([[:xdigit:]]\{2\}\)\([[:xdigit:]]\{2\}\)\([[:xdigit:]]\{2\}\)\([[:xdigit:]]\{2\}\)$,\1:\2:\3:\4,g;T;p')"
+	MAC1="$(cat /sys/fsl_otp/HW_OCOTP_MAC1 | sed -ne 's,^0x\([[:xdigit:]]\{2\}\)\([[:xdigit:]]\{2\}\)$,\1:\2:,g;T;p' )"
 
-	if [ -f "/proc/device-tree/digi,uboot-env,encrypted" ]; then
-		echo "U-Boot environment is encrypted"
-	else
-		echo "U-Boot environment is NOT encrypted"
-	fi
+	echo "Fused MAC: ${MAC1}${MAC0}"
+	echo "Register CFG4: ${CFG4}"
+	echo "Register CFG5: ${CFG5}"
+	printf "\n"
 
 	echo "-------------End of report------------"
 }
 
 
 DISTRO="$(sed -ne 's,DISTRO = \(.*\)$,\1,g;T;p' /etc/build)"
-DEY_VERSION="$(sed -ne 's,DISTRO_VERSION = \(.*\)$,\1,g;T;p' /etc/build)"
-UBOOT_VERSION="$(cat /proc/device-tree/digi,uboot,version 2>/dev/null | tr -d '\0')"
-if [ -z "${UBOOT_VERSION}" ]; then
-	UBOOT_PARTITION="/dev/mmcblk0boot0"
-	[ -c "/dev/mtd0" ] && UBOOT_PARTITION="/dev/mtd0"
-	UBOOT_VERSION="$(strings ${UBOOT_PARTITION} | grep -m 1 dub | cut -d' ' -f2)"
-fi
-MACHINE="$(cat /proc/device-tree/digi,machine,name | tr -d '\0')"
-BOARD_VARIANT="$(cat /proc/device-tree/digi,hwid,variant | tr -d '\0')"
-BOARD_SN="$(cat /proc/device-tree/digi,hwid,sn | tr -d '\0')"
-BOARD_VERSION="$(cat /proc/device-tree/digi,carrierboard,version | tr -d '\0')"
-BOARD_ID="$(cat /proc/device-tree/digi,carrierboard,id | tr -d '\0')"
-if grep -qs '\<digi,ccimx6ul\>' /proc/device-tree/compatible; then
-	MCA_NODE="/sys/bus/i2c/devices/0-007e"
-	MCA_HW_VERSION=$(cat ${MCA_NODE}/hw_version 2>/dev/null | tr -d '\0') || MCA_HW_VERSION="??"
-	MCA_FW_VERSION=$(cat ${MCA_NODE}/fw_version 2>/dev/null | tr -d '\0') || MCA_FW_VERSION="??"
-	MCA_VERSION="HW_VERSION=${MCA_HW_VERSION}  FW_VERSION=${MCA_FW_VERSION}"
+DISTRO_VERSION="$(sed -ne 's,DISTRO_VERSION = \(.*\)$,\1,g;T;p' /etc/build)"
+UBOOT_PARTITION="/dev/mmcblk3boot0"
+UBOOT_VERSION="$(strings ${UBOOT_PARTITION} | grep "U-Boot 20")"
+BOARD_BASE="$(${FW_PRINTENV} | sed -ne 's,board_name=\(.*\)$,\1,g;T;p')"
+
+EEPROM_NODE="/sys/bus/i2c/devices/0-0052/eeprom"
+if ! [ -f ${EEPROM_NODE} ]; then
+	EEPROM_NODE="/sys/bus/i2c/devices/2-0052/eeprom"
 fi
 
-IOEXP_NODE="/sys/bus/i2c/devices/0-006e"
-if [ -d "$IOEXP_NODE" ]; then
-	IOEXP_HW_VERSION=$(cat ${IOEXP_NODE}/hw_version 2>/dev/null | tr -d '\0') || IOEXP_HW_VERSION="??"
-	IOEXP_FW_VERSION=$(cat ${IOEXP_NODE}/fw_version 2>/dev/null | tr -d '\0') || IOEXP_FW_VERSION="??"
-	IOEXP_VERSION="HW_VERSION=${IOEXP_HW_VERSION}  FW_VERSION=${IOEXP_FW_VERSION}"
-fi
+dd if=${EEPROM_NODE} bs=1k count=1 2>/dev/null | strings -n 1 -o > /tmp/eeprom
+DEVICE_ENUM="$(cat /tmp/eeprom | sed -ne 's,^[[:space:]]*30 \(.*\).*$,\1,g;T;p')"
+DEVICE_SN="$(cat /tmp/eeprom | sed -ne 's,^[[:space:]]*54 \(.*\).*$,\1,g;T;p')"
+DEVICE_REV="$(cat /tmp/eeprom | sed -ne 's,^[[:space:]]*42 \(.*\).*$,\1,g;T;p')"
+DISPLAYSTRING="$(cat /tmp/eeprom | sed -ne 's,^[[:space:]]*1230 \(.*\).*$,\1,g;T;p')"
 
 DATE="$(date "+%Y%m%d%H%M%S")"
 FILE="/tmp/sysinfo-${DEY_VERSION}-${BOARD_SN}-${DATE}.txt"
@@ -291,14 +289,13 @@ printf "\n\n"
 	echo "-------------------------------------"
 	echo ""
 
-	echo "||*Component*||*Version*"
-	echo "|| DUT | SN-${BOARD_SN}, ${MACHINE} ${BOARD_VARIANT} SBCv${BOARD_VERSION} board_ID=${BOARD_ID}."
-	echo "|| U-Boot | ${UBOOT_VERSION}"
-	echo "|| Firmware | ${DISTRO}-${DEY_VERSION}-$(cat /etc/version)"
-	echo "|| Kernel | $(uname -a)"
-	echo "|| meta-digi | $(sed -ne '/^meta-digi-dey/s,.*= \(.*\)$,\1,g;T;p' /etc/build)"
-	[ -n "${MCA_VERSION}" ] && echo "|| MCA | ${MCA_VERSION}"
-	[ -n "${IOEXP_VERSION}" ] && echo "|| I/O Expander | ${IOEXP_VERSION}"
+	echo "||*Component*    ||*Version*"
+	echo "|| DUT           || E#: ${DEVICE_ENUM}, SN: ${DEVICE_SN}, REV: ${DEVICE_REV}, Board: ${BOARD_BASE}"
+	echo "|| U-Boot        || ${UBOOT_VERSION}"
+	echo "|| Firmware      || ${DISTRO}-${DISTRO_VERSION}-$(cat /etc/version)"
+	echo "|| Kernel        || $(uname -a)"
+	echo "|| meta-ces      || $(sed -ne '/^meta-ces/s,.*= \(.*\)$,\1,g;T;p' /etc/build)"
+	echo "|| Displaystring || ${DISPLAYSTRING}"
 	printf "\n\n"
 ) | tee ${FILE}
 
