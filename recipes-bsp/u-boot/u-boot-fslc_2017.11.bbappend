@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/u-boot-fslc:"
 
-SRCREV = "e515ca338bd6d0b968b853135f0c9b33add998fb"
+SRCREV = "8256d6a4d020b381b29d9fb95d74c8ff58785226"
 SRCBRANCH = "ces-rocko-2017.11+fslc"
 SRC_URI = "git://github.com/software-celo/u-boot-fslc.git;branch=${SRCBRANCH} \
            file://bootlogo.bmp \
