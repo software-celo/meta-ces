@@ -1,6 +1,6 @@
-SUMMARY = "Image booting a chromium browser in fullscreen"
+SUMMARY = "Image booting a minimal console linux"
 
-require image-base/ces-chromium-base.inc
+require image-base/ces-console-base.inc
 
 PV = "V3.0"
 PR = "r0"
@@ -35,4 +35,4 @@ CHRIST_UPDATE_ONLY_CUSTOM = "0"
 CHRIST_UPDATE_INCLUDE_CCLIB = "0"
 # CHRIST_UPDATE_CCLIB_FILE = "${THISDIR}/cclib.sh"
 
-export IMAGE_BASENAME = "ces-chromium-demoimage"
+export IMAGE_BASENAME = "ces-console-demoimage"
