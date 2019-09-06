@@ -1,0 +1,13 @@
+{
+    "device": "/dev/dri/card1",
+    "hwcursor": false,
+    "pbuffers": true,
+    "outputs": [
+        {
+            "name": "LVDS1",
+            "size": "800x480",
+	    "format": "rgb565",
+	    "touchDevice": "/dev/input/event1"
+        }
+    ]
+}
