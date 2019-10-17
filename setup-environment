@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: MIT
+#
+# Helper script for generation of OE conf/local.conf and conf/bblayers.conf
+# files from custom layer samples with preset machine and distro variables.
+#
+# The usage of the script is limited to a particular configuration of layers.
+#
+# Copyright (C) 2019 ilbers GmbH
+# Copyright (C) 2019 Christ Electronic Systems GmbH
+
+if [ -n "$BASH_SOURCE" ]; then
+    THIS_SCRIPT=`readlink -f $BASH_SOURCE`
+elif [ -n "$ZSH_NAME" ]; then
+    THIS_SCRIPT=`readlink -f $0`
+else
+    THIS_SCRIPT=`readlink -f $(pwd)/setup-environment`
+    if [ ! -e "$THIS_SCRIPT" ]; then
+        echo "Can not find $THIS_SCRIPT file." >&2
+        echo "Please run the script from the directory containing it." >&2
+        exit 1
+    fi
+fi
+
+THIS_LAYER_DIR=`dirname $THIS_SCRIPT`
+
+export TEMPLATECONF="$THIS_LAYER_DIR/conf"
+. $THIS_LAYER_DIR/../poky/oe-init-build-env "$1" "$THIS_LAYER_DIR/../poky/bitbake"
+unset TEMPLATECONF
+
+SUPPORTED_LAYER_MACHINES=`ls $THIS_LAYER_DIR/conf/machine/*.conf | sed 's#.*/\(.*\)\.conf#  \1#g'`
+if [ -n "$MACHINE" ]; then
+    if [ `echo $SUPPORTED_LAYER_MACHINES | grep -c $MACHINE` -gt 0 ]; then
+        sed "s#^MACHINE ??=.*#MACHINE ??= \"$MACHINE\"#g" -i $BUILDDIR/conf/local.conf
+    else
+	echo "Machine '$MACHINE' is unsupported by the layer maintainers, ignoring."
+        echo -e "List of supported machines:\n$SUPPORTED_LAYER_MACHINES\n"
+    fi
+fi
+
+SUPPORTED_POKY_DISTROS=`ls $THIS_LAYER_DIR/../poky/meta-poky/conf/distro/*.conf | sed 's#.*/\(.*\)\.conf#  \1#g'`
+SUPPORTED_LAYER_DISTROS=`ls $THIS_LAYER_DIR/conf/distro/*.conf | sed 's#.*/\(.*\)\.conf#  \1#g'`
+if [ -n "$DISTRO" ]; then
+    if [ `echo $SUPPORTED_LAYER_DISTROS | grep -c $DISTRO` -gt 0 -o \
+         `echo $SUPPORTED_POKY_DISTROS | grep -c $DISTRO` -gt 0 ]; then
+        sed "s#^DISTRO ?=.*#DISTRO ?= \"$DISTRO\"#g" -i $BUILDDIR/conf/local.conf
+    else
+	echo "Distro '$DISTRO' is unsupported in this layer and not a Poky distro, ignoring."
+        echo -e "List of the supported distros:\n$SUPPORTED_LAYER_DISTROS\n"
+        echo -e "List of Poky distros:\n$SUPPORTED_POKY_DISTROS\n"
+    fi
+fi

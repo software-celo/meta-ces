@@ -1,0 +1,31 @@
+Christ Hardware and Software Adaption Layer
+===========================================
+
+Supported boards
+----------------
+
+* pixi-cdl100
+
+Supported distros
+-----------------
+
+* ces-fb
+
+Provided image targets
+----------------------
+
+* ces-qt-demoimage
+
+Quick Start Guide
+-----------------
+
+Once you have downloaded the source of all projects, you should call:
+
+$: MACHINE=pixi-cdl100 DISTRO=ces-fb . ./setup-environment [<build directory>]
+$: bitbake ces-qt-demoimage
+
+Contributing
+------------
+
+Project: https://github.com/software-celo/meta-ces-warrior.git
+Support: linux@christ-es.de
