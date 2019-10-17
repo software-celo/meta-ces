@@ -19,6 +19,7 @@ do_install () {
 	install -m 0644 ${WORKDIR}/wired1.network ${D}${sysconfdir}/systemd/network/wired1.network
 }
 
+RDEPENDS_${PN} = "systemd"
 
 FILES_${PN} = " ${sysconfdir}/systemd/network/wired0.network \
 		${sysconfdir}/systemd/network/wired1.network \
