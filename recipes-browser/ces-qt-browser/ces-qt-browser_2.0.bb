@@ -26,7 +26,6 @@ SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH}
 # Systempath for error landing page
 ERL_PATH = "${datadir}/ces-qt-browser/erl"
 
-
 do_install_append() {
 	install -d ${D}${systemd_unitdir}/system
 	install -d ${D}${sysconfdir}
@@ -53,14 +52,12 @@ do_install_append() {
 	inst_erlpage
 }
 
-
 # Install erl directory
 inst_erldir() {
 	echo "Install erl directory"
 	install -d ${D}${datadir}
 	install -d ${D}${ERL_PATH}
 }
-
 
 # Install standard error landing page
 inst_erlpage() {
@@ -70,12 +67,12 @@ inst_erlpage() {
 	install -m 0644 ${WORKDIR}/erlfunc.js ${D}${ERL_PATH}/erlfunc.js
 }
 
+DEPENDS += "systemd qtwebengine qtdeclarative"
 
-DEPENDS += "qtwebengine systemd qtquick1 qtdeclarative"
-
-RDEPENDS_${PN} += "qtwebengine qtbase-plugins systemd qtvirtualkeyboard"
-RDEPENDS_${PN} += "qtsvg-plugins qtgraphicaleffects-qmlplugins qtwebengine-qmlplugins qtquickcontrols-qmlplugins qtquick1 qtdeclarative qtdeclarative-qmlplugins "
-RDEPENDS_${PN} += "qtquickcontrols2 qtquickcontrols2-qmlplugins qtquick1-qmlplugins qtquickcontrols-qmlplugins"
+RDEPENDS_${PN} += " systemd qtwebengine qtvirtualkeyboard"
+RDEPENDS_${PN} += " qtbase-plugins qtwebengine-qmlplugins qtdeclarative-qmlplugins"
+RDEPENDS_${PN} += " qtsvg-plugins qtgraphicaleffects-qmlplugins"
+RDEPENDS_${PN} += " qtquickcontrols-qmlplugins qtquickcontrols2-qmlplugins"
 
 FILES_${PN} = "${systemd_unitdir}/system/*.service ${sysconfdir} ${sbindir} ${datadir} ${ERL_PATH}"
 
