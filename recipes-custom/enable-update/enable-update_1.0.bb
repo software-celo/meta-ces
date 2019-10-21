@@ -16,7 +16,7 @@ do_install () {
 
 FILES_${PN} = "${base_sbindir}/enable-update"
 
-RDEPENDS_${PN} = "u-boot-fslc-fw-utils"
+RDEPENDS_${PN} = "u-boot-fw-utils"
 
 # Prevents do_package failures with:
 # debugsources.list: No such file or directory:

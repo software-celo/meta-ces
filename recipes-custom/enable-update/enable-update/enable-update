@@ -1,7 +1,15 @@
 #!/bin/sh
-echo 0 > /sys/block/mmcblk3boot0/force_ro
+
+for boot0dev in /sys/block/mmcblk*boot0; do
+    echo 0 > $boot0dev/force_ro
+done
+
 /sbin/fw_setenv run_update 1
 RET=$?
 sync
-echo 1 > /sys/block/mmcblk3boot0/force_ro
+
+for boot0dev in /sys/block/mmcblk*boot0; do
+    echo 1 > $boot0dev/force_ro
+done
+
 exit $RET
