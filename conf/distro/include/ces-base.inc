@@ -1,8 +1,6 @@
-# Base this distro on fslc-base which in turn is based on poky
-require conf/distro/include/fslc-base.inc
-
-DISTRO = "ces-base"
+DISTRO ?= "ces-base"
 DISTRO_NAME = "Christ Electronic Systems GmbH Distro Base"
+DISTRO_VERSION = "2.7 / Warrior"
 
 MAINTAINER = "Christ Electronic Systems Embedded Linux Team <linux@christ-es.de>"
 
@@ -10,12 +8,19 @@ MAINTAINER = "Christ Electronic Systems Embedded Linux Team <linux@christ-es.de>
 INHERIT += "buildhistory"
 BUILDHISTORY_COMMIT = "1"
 
+DISTROOVERRIDES = "ces"
+INHERIT += "distrooverrides"
+
 # Disable sysvinit for recipes with systemd support
-DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit pulseaudio bluez5 "
+DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit pulseaudio bluez5"
 VIRTUAL-RUNTIME_init_manager = "systemd"
+VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+VIRTUAL-RUNTIME_login_manager = "shadow-base"
+VIRTUAL-RUNTIME_dev_manager = "udev"
 
 # Default features (for packagegroup(-core)-base)
-DISTRO_FEATURES_DEFAULT = "argp ext2 vfat largefile usbgadget usbhost xattr ipv4 ipv6 systemd vfat pam"
+DISTRO_FEATURES_DEFAULT = "ipv6 pam systemd usbgadget usbhost vfat xattr ext2"
+DISTRO_FEATURES += "${DISTRO_FEATURES_DEFAULT}"
 
-# Remove bluez5 appended in fslc-base
-DISTRO_FEATURES_remove = "bluez5"
+# Disable python usage in opkg-utils
+PACKAGECONFIG_remove_pn-opkg-utils = "python"
