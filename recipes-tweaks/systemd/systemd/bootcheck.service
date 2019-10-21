@@ -1,5 +1,5 @@
 [Unit]
-Description=sets the bootcheck variable
+Description=Set the bootcheck variable
 
 [Service]
 ExecStart=/usr/sbin/bootcheck.sh
