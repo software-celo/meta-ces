@@ -52,6 +52,3 @@ BBLAYERS_NON_REMOVABLE ?= " \
 # In addition after backporting fixes to mesa-19 the enabled vc4 driver is
 # not needed anymore.
 BBMASK_ces-fb += "${BBLAYERS_DIR}/meta-freescale/recipes-graphics/mesa/mesa_%.bbappend"
-
-# U-Boot from Freescale BSP does not contain pixi-cdl100 board support.
-BBMASK_ces-fb += "${BBLAYERS_DIR}/meta-freescale/recipes-bsp/u-boot"

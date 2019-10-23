@@ -1,0 +1,12 @@
+diff --git a/tools/Makefile b/tools/Makefile
+index 5db2a54..df56c0c 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -267,6 +267,7 @@ HOST_EXTRACFLAGS += -include $(srctree)/include/libfdt_env.h \
+ 		$(patsubst -I%,-idirafter%, $(filter -I%, $(UBOOTINCLUDE))) \
+ 		-I$(srctree)/lib/libfdt \
+ 		-I$(srctree)/tools \
++		-I$(srctree)/scripts/dtc/libfdt \
+ 		-DUSE_HOSTCC \
+ 		-D__KERNEL_STRICT_NAMES \
+ 		-D_GNU_SOURCE
