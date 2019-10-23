@@ -2,8 +2,6 @@ LICENSE = "MIT"
 
 inherit image extrausers image-buildinfo
 
-LICENSE = "MIT"
-
 IMAGE_FEATURES += " package-management"
 IMAGE_LINGUAS = "de-de en-gb"
 

@@ -1,79 +1,25 @@
-require ces-base/ces-base-settings.inc
+require ces-console-base.inc
 
-SOUND_PKGS_INSTALL = '${@bb.utils.contains("DISTRO_FEATURES", "alsa", "${SOUND_PKGS}", "",d)}'
-SOUND_PKGS = " \
-    packagegroup-fsl-gstreamer1.0-full \
-    alsa-plugins \
-    alsa-tools \
-    alsa-utils \
+QT_MINIMAL_PACKAGES_INSTALL = " \
+	qtbase \
+	qtbase-plugins \
+	qtsvg-plugins \
+	qtgraphicaleffects-qmlplugins \
+	qtwebengine-qmlplugins \
+	qtdeclarative \
+	qtdeclarative-qmlplugins \
+	qtquickcontrols-qmlplugins \
+	qtwebengine \
+	qt5-opengles2-test \
+	qtvirtualkeyboard \
+"
+
+QT_BROWSER_PACKAGES_INSTALL = " \
+	ces-qt-browser \
+	getting-started \
 "
 
 IMAGE_INSTALL_append = " \
-    packagegroup-basic \
-    udev-extra-rules \
-    packagegroup-base-extended \
-    qtbase \
-    qtbase-plugins \
-    qtsvg-plugins \
-    qtgraphicaleffects-qmlplugins \
-    qtwebengine-qmlplugins \
-    qtdeclarative \
-    qtdeclarative-qmlplugins \
-    qtquickcontrols-qmlplugins \
-    qtwebengine \
-    mmc-utils \
-    tmux \
-    picocom \
-    openssl \
-    openssl-misc \
-    ca-certificates \
-    userconf \
-    nano \
-    logrotate \
-    liberation-fonts \
-    tzdata \
-    tzdata-misc \
-    tzdata-posix \
-    tzdata-right \
-    tzdata-europe \
-    ces-qt-browser \
-    can-utils \
-    libsocketcan \
-    iproute2 \
-    ${SOUND_PKGS_INSTALL} \
-    u-boot-fw-utils \
-    libusbg \
-    file \
-    aspell \
-    e2fsprogs \
-    e2fsprogs-mke2fs \
-    e2fsprogs-tune2fs \
-    sqlite3 \
-    curl \
-    nfs-utils-client \
-    openssh-scp \
-    openssh-sftp \
-    bzip2 \
-    gdbserver \
-    grep \
-    ldd \
-    lsof \
-    mtd-utils \
-    dosfstools \
-    util-linux-fstrim \
-    devmem2 \
-    evtest \
-    hdparm \
-    iperf3 \
-    i2c-tools \
-    memtester \
-    lmbench \
-    nbench-byte \
-    ethtool \
-    stress \
-    util-linux \
-    sysinfo \
-    systemd-bootcheck \
-    getting-started \
-    enable-update \
+	${QT_MINIMAL_PACKAGES_INSTALL} \
+	${QT_BROWSER_PACKAGES_INSTALL} \
 "
