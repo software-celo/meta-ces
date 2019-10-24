@@ -3,7 +3,7 @@
 #IMAGE_ROOTFS = "${WORKDIR}/${IMAGE_NAME}${PV}/rootfs"
 
 #U_BOOT_EXT = "bin"
-U_BOOT_EXT_mx6 = "imx"
+U_BOOT_EXT_imx = "imx"
 U_BOOT_SYMLINK = "u-boot-${MACHINE}.${U_BOOT_EXT}"
 U_BOOT_BINARY = "u-boot.${U_BOOT_EXT}"
 
@@ -19,6 +19,7 @@ DEPENDS_append = " virtual/bootloader u-boot-mkimage-native"
 
 imagedeploy_kernel() {
     cp -p ${DEPLOY_DIR_IMAGE}/zImage-${MACHINE}.bin ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage
+    cp -p ${DEPLOY_DIR_IMAGE}/${KERNEL_DEVICETREE} ${IMAGE_ROOTFS}/../${MACHINE}_bin/zImage-${KERNEL_DEVICETREE}
     cp -pP ${DEPLOY_DIR_IMAGE}/*.dtb ${IMAGE_ROOTFS}/../${MACHINE}_bin/
 }
 
