@@ -1,0 +1,197 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Christ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class=banner>
+            <img src="header-logo-left.png">
+            <div class="spacer"></div>
+        </div>
+        <h1>i.MX6 Evalkit</h1>
+        <h2>Basic Information &amp; First Steps</h2>
+        <img id="logo" src="header-logo-center.png" alt="christ">
+    </header>
+    <section>
+        <header>
+            <h1>Accessing the System via RS232 or SSH</h1>
+        </header>
+        <main>
+            <ul>
+                <li>RS232: Use one of the included RS232 adapter cables and a null modem cable to connect the evalkit to your PC</li>
+                <ul>
+                    <li>Terminal settings: 115200 baud 8N1</li>
+                    <li>User: root</li>
+                    <li>Password: root123</li>
+                </ul>
+                <li>SSH:</li>
+                <ul>
+                    <li>Port 22</li>
+                    <li>User: root</li>
+                    <li>Password: root123</li>
+                </ul>
+            </ul>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Default Settings</h1>
+        </header>
+        <main>
+            <ul>
+                <li>Network address settings: DHCP</li>
+                <ul>
+                    <li>Configurable in /etc/system/network/wired0.network</li>
+                    <ul>
+                        <li>DHCP default settings:</li>
+                        <ul class="no-bullet-point">
+                            <li>[Match]</li>
+                            <li>Name=eth0</li>
+                            <li>[Network]</li>
+                            <li>DHCP=yes</li>
+                        </ul>
+                        <li>Simple static IP example: </li>
+                        <ul class="no-bullet-point">
+                            <li>[Match]</li>
+                            <li>Name=eth0</li>
+                            <li>[Network]</li>
+                            <li>Address=192.168.56.1/24</li>
+                        </ul>
+                    </ul>
+                    <li>Restart systemd-networkd to reload your configuration</li>
+                    <ul>
+                        <li>systemctl restart systemd-networkd</li>
+                    </ul>
+                    <li>For more information refer to <a href="https://www.freedesktop.org/software/systemd/man/systemd.network.html">https://www.freedesktop.org/software/systemd/man/systemd.network.html</a></li>
+                </ul>
+                <li>Autostart URL:</li>
+                <ul>
+                    <li>Configurable in /etc/browser.conf</li>
+                    <ul>
+                        <li>Example: START_URL=https://christ-es.de</li>
+                    </ul>
+                    <li>Restart the browser to reload the webpage (ces-qt-demoimage)</li>
+                    <ul>
+                        <li>systemctl restart qtbrowser-autostart.service</li>
+                    </ul>
+                    <li>Or restart the browser to reload the webpage (ces-x11-chromeimage)</li>
+                    <ul>
+                        <li>systemctl restart chromium-autostart.service</li>
+                    </ul>
+                </ul>
+            </ul>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Rebuilding the Image</h1>
+        </header>
+        <main>
+            <p>Our source repositories and short instructions on how to rebuild the image can be found at: <a href="https://github.com/software-celo/ces-bsp-platform">https://github.com/software-celo/ces-bsp-platform</a>.</p>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Using the "erlfunc.js" script on the error landing page</h1>
+        </header>
+        <main>
+          <p>We use a customized Qt5/Chromium based-browser, which offers a customized error landing page. This error landing page is able to show two important information:</p>
+          <ul style="list-style-type: none;">
+            <li><a style="color:red">Errordomain:</a> Basic description of error domain as string </li>
+            <li><a style="color:red">Errorcode:</a>   Details the error domain by a numeric code <br> <a style="padding-left:100px">see <a href="https://cs.chromium.org/chromium/src/net/base/net_error_list.h">https://cs.chromium.org/chromium/src/net/base/net_error_list.h</a></a>  </li>
+          </ul>
+          <p>In case of an error, the Qt browser provides these information in the url of the error landing page.
+          <br>We provide a script named "erlfunc.js" in the standard image, which parses the URL and extracts the error information.</p>
+          <p>The error landing page is exchangeable,customizable and not fixed for the user. A use of the "erlfunc.js" is also possible too.</p>
+          <p>The predefined path ot the error landing page with the "erlfunc.js" script is: <br> <a style="padding-left: 40px; color: blue ">/usr/share/ces-qt-browser/erl/<a> </p>
+          <h3>How to use the "erlfunc.js" script</h3>
+          <div style="font-weight: normal">
+            <p>To use the erlfunc.js script on a customized error landing page, you have to include two elements in your code, using the following 2 predefined <a style="color:red;"> id attribute descriptors:</a></p>
+            <ul style="list-style-type: none;">
+              <li>
+                    <a style="color: green;">&lt;p<a style="color:red;"> id="errordomain"</a><a style="color: green;">&gt;</a> Domaintext here!</a>
+                    <a style="color: green;">&lt;/p&gt;</a>
+              </li>
+              <li>
+                    <a style="color: green;">&lt;p<a style="color:red;"> id="errorcode"</a><a style="color: green;">&gt;</a> Errorcode here!</a>
+                    <a style="color: green;">&lt;/p&gt;</a>
+              </li>
+            </ul>
+            <p>To parse the url and fill the html elements with the error information, link the "erlfunc.js" in the head section of your customized error landing page.<br> An embedded javascript call of the function <code style="background-color: lightgrey; font-weight: bold">checkURLerrs()</code> in the body element of your html error landing page will parse the url and fill the html elements with the provided error information.<br><br><b>Note:</b> The javascript function call is encapsulated in an attribute in the body element called "onload". This is needed, because the function needs to be called at the load time of the error landing page body.</p>
+            <p> <a style="color: red; font-weight: bold;">Warning:</a><br> <a style="padding-left: 40px;">The QT browser expects the error landing page in the given local url named as "error.html"</a><p>
+            <a style="padding-left: 40px; color: blue ">/usr/share/ces-qt-browser/erl/<a>
+            <p> <a style="color: green; font-weight: bold;">Example:</a><br> <a style="padding-left: 40px;">Standard error.html page with error parsing</a> <p>
+              <div style="background-color: lightgrey">
+                <xmp style="color: black">
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                        <title>Error Landing Page</title>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+                        <link rel="stylesheet" type="text/css" href="index.css">
+                        <script src="erlfunc.js"></script>
+                    </head>
+                    <body onload="checkURLerrs();">
+                      <div class="errorbox" align="center">
+                        <div class="textbox" style="color:black; font-weight: bold">
+                        <p id="errordomain">An error occured</p>
+                        <p>Errorcode: <b id="errorcode"></b></p>
+                        </div>
+                      </div>
+                    </body>
+                  </html>
+                </xmp>
+              </div>
+            </div>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Browser Information</h1>
+        </header>
+        <main>
+            <div id="userAgentContainer"></div>
+            <p><a>Width: </a><a id="screenWidthContainer"></a><a> px</a><p>
+            <p><a>Height: </a><a id="screenHeightContainer"></a><a> px</a><p>
+            <p><a>ColorDepth: </a><a id="screenColorDeepContainer"></a><a> bit</a><p>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Contact Information</h1>
+        </header>
+        <main>
+            <div class="address">
+                <p style="color:blue;font-weight:bold">Linux Support</p>
+                <p>Christ – Electronic Systems GmbH</p>
+                <p>Alpenstraße 34</p>
+                <p>D-87700 Memmingen</p>
+                <p>Tel. +49 (0)8331/8371-768</p>
+                <p>linux@christ-es.de</p>
+            </div>
+        </main>
+    </section>
+    <section>
+        <header>
+            <h1>Disclaimer</h1>
+        </header>
+        <main>
+            Technical data are subject to modification and delivery subject to availability. Any liability that the data and illustrations are complete, actual or correct is excluded. Designations may be trademarks and/or copyrights of the respective manufacturer, the use of which by third parties for their own purposes may infringe the rights of such owner.
+        </main>
+    </section>
+	<div align="center" style="padding-bottom: 20px" >
+		<form>
+			<input class="button" type="button" value="Go Back" onclick="window.location.replace('http://localhost:8080')">
+		</form>
+	</div>
+    <footer>
+        <img src="footer.png" alt="footer">
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
