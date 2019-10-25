@@ -1,4 +1,4 @@
-PACKAGECONFIG_append = "gles2 icu accessibility fontconfig dbus libinput "
+PACKAGECONFIG_append = " icu accessibility fontconfig dbus libinput"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtbase:"
 
