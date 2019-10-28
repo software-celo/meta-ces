@@ -1,19 +1,19 @@
-From a1f0aa9e7815162f59f3ebc47b99dd4572717c18 Mon Sep 17 00:00:00 2001
+From c40133f3251ba706f9c35757db4ffe95eb572bed Mon Sep 17 00:00:00 2001
 From: Peter Fink <pfink@christ-es.de>
 Date: Wed, 4 Nov 2015 11:16:55 +0100
 Subject: [PATCH] bootlogo: align: center
 
 Signed-off-by: Peter Fink <pfink@christ-es.de>
 ---
- drivers/video/console/fbcon.c    | 1 +
+ drivers/video/fbdev/core/fbcon.c | 1 +
  drivers/video/fbdev/core/fbmem.c | 4 ++--
  2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/console/fbcon.c b/drivers/video/console/fbcon.c
-index f53fc15..b87bbcc 100644
---- a/drivers/video/console/fbcon.c
-+++ b/drivers/video/console/fbcon.c
-@@ -580,6 +580,7 @@ static void fbcon_prepare_logo(struct vc_data *vc, struct fb_info *info,
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 75ebbbf..84007cb 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -595,6 +595,7 @@ static void fbcon_prepare_logo(struct vc_data *vc, struct fb_info *info,
  	if (fb_get_color_depth(&info->var, &info->fix) == 1)
  		erase &= ~0x400;
  	logo_height = fb_prepare_logo(info, ops->rotate);
@@ -22,10 +22,10 @@ index f53fc15..b87bbcc 100644
  	q = (unsigned short *) (vc->vc_origin +
  				vc->vc_size_row * rows);
 diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 0705d88..ea525cb 100644
+index 2040542..43dfbf4 100644
 --- a/drivers/video/fbdev/core/fbmem.c
 +++ b/drivers/video/fbdev/core/fbmem.c
-@@ -498,10 +498,10 @@ static int fb_show_logo_line(struct fb_info *info, int rotate,
+@@ -501,10 +501,10 @@ static int fb_show_logo_line(struct fb_info *info, int rotate,
  		fb_set_logo(info, logo, logo_new, fb_logo.depth);
  	}
  
@@ -37,7 +37,7 @@ index 0705d88..ea525cb 100644
 +	image.dy = (info->var.yres / 2) - (image.height / 2); //center the boot logo
  
  	if (rotate) {
- 		logo_rotate = kmalloc(logo->width *
+ 		logo_rotate = kmalloc_array(logo->width, logo->height,
 -- 
 2.7.4
 

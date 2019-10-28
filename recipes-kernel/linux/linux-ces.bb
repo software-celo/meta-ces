@@ -16,6 +16,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/linux-ces:"
 
 SRC_URI = " \
 	git://github.com/software-celo/linux-fslc.git;branch=${KBRANCH} \
+	file://0001-bootlogo-align-center.patch \
 	file://bootlogo.ppm \
 "
 
