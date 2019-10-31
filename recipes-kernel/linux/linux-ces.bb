@@ -3,7 +3,7 @@ DESCRIPTION = "Linux Kernel with patches for Christ Electronic Systems"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 
-COMPATIBLE_MACHINE = "mx6|pixi-cdlx00|pixi-cdl100|pixi-cdl200|crix-cq100|crix-arq100|pixi-cq100|pixi-cq200|crix-cdl100|4cbox-cq100|4cbox-cq200"
+COMPATIBLE_MACHINE = "mx6|pixi-cdlx00|pixi-cdl100|pixi-cdl200|crix-cq100|crix-arq100|pixi-cq100|pixi-cq200|crix-cdl100|4cbox-cq100|4cbox-cq200|blix-bdl100|blix-bq100"
 
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_ces = "1"
