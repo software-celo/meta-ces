@@ -1,3 +1,4 @@
+#!/bin/sh
 # SPDX-License-Identifier: MIT
 #
 # Helper script for generation of OE conf/local.conf and conf/bblayers.conf
@@ -48,4 +49,62 @@ if [ -n "$DISTRO" ]; then
         echo -e "List of the supported distros:\n$SUPPORTED_LAYER_DISTROS\n"
         echo -e "List of Poky distros:\n$SUPPORTED_POKY_DISTROS\n"
     fi
+fi
+
+CWD=`pwd`
+
+# Handle EULA setting
+EULA_ACCEPTED=
+BUILD_DIR=$1
+
+# EULA has been accepted already (ACCEPT_FSL_EULA is set in local.conf)
+if grep -q '^\s*ACCEPT_FSL_EULA\s*=\s*["'\'']..*["'\'']' conf/local.conf; then
+    EULA_ACCEPTED=1
+fi
+
+if [ -z "$EULA_ACCEPTED" ] && [ -n "$EULA" ]; then
+    # The FSL EULA is not set as accepted in local.conf, but the EULA
+    # variable is set in the environment, so we just configure
+    # ACCEPT_FSL_EULA in local.conf according to $EULA.
+    echo "ACCEPT_FSL_EULA = \"$EULA\"" >> conf/local.conf
+elif [ -n "$EULA_ACCEPTED" ]; then
+    # The FSL EULA has been accepted once, so ACCEPT_FSL_EULA is set
+    # in local.conf.  No need to do anything.
+    :
+else
+    # THE FSL EULA is not set as accepted in local.conf, and EULA is
+    # not set in the environment, so we need to ask user if he/she
+    # accepts the FSL EULA:
+    cat <<EOF
+
+Some BSPs depend on libraries and packages which are covered by Freescale's
+End User License Agreement (EULA). To have the right to use these binaries in
+your images, you need to read and accept the following...
+
+EOF
+
+    sleep 4
+
+    more -d $CWD/../sources/meta-freescale/EULA
+    echo
+    REPLY=
+    while [ -z "$REPLY" ]; do
+        echo -n "Do you accept the EULA you just read? (y/n) "
+        read REPLY
+        case "$REPLY" in
+            y|Y)
+            echo "EULA has been accepted."
+	    echo "" >> conf/local.conf
+	    echo "#Accept EULA of meta-freescale" >> conf/local.conf
+            echo "ACCEPT_FSL_EULA = \"1\"" >> conf/local.conf
+            ;;
+            n|N)
+            echo "EULA has not been accepted."
+	    echo "May a build with this BSP will not work! Initialize bitbake again and accept EULA then!"
+            ;;
+            *)
+            REPLY=
+            ;;
+        esac
+    done
 fi
