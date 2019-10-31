@@ -1,6 +1,7 @@
 DISTRO ?= "ces-base"
 DISTRO_NAME = "Christ Electronic Systems GmbH Distro Base"
-DISTRO_VERSION = "2.7 / Warrior"
+DISTRO_VERSION = "2.7"
+DISTRO_CODENAME = "warrior"
 
 MAINTAINER = "Christ Electronic Systems Embedded Linux Team <linux@christ-es.de>"
 
