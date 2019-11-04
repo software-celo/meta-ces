@@ -1,0 +1,119 @@
+= Christ Hardware and Software Adaption Layer
+=============================================
+
+Yocto Warrior 2.7
+-----------------
+
+Description
+-----------
+
+Official https://www.christ-es.de[Christ Electronic Systems GmbH] BSP Yocto Project layer.
+
+Supported distros & images
+--------------------------
+
+Currently only ces-fb is supported with ces-console-image and ces-qt-demoimage.
+
+Supported boards
+----------------
+
+Not all machines are supported yet. The supported machines are listed below:
+
+[width="100%",cols="^s,,,"]
+|===
+
+| MACHINE
+| *Distro*
+| *Kernel*
+| *U-Boot*
+
+|
+| *ces-fb*
+| https://github.com/software-celo/linux-fslc/tree/linux-4.19.17-ces[*4.19.17-ces*]
+| https://github.com/software-celo/u-boot-fslc/tree/ces-mainline-2017.11+fslc[*2017.11-fslc-ces*]
+
+| pixi-cdl100
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+
+| pixi-cdl200
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+
+| pixi-cq100
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+
+| pixi-cq200
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+| crix-cq100
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+
+| crix-arq100
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+
+| blix-bdl100
+| tbd  :watch:
+| tbd  :watch:
+| supported :heavy_check_mark:
+
+
+| blix-bq100
+| tbd  :watch:
+| tbd  :watch:
+| supported :heavy_check_mark:
+
+
+| 4cbox-cdl100
+| tbd :watch:
+| tbd :watch:
+| tbd :watch:
+
+
+| 4cbox-cdl200
+| tbd :watch:
+| tbd :watch:
+| tbd :watch:
+
+| 4cbox-cq100
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+| 4cbox-cq200
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+| supported :heavy_check_mark:
+
+|===
+
+Quick Start Guide
+-----------------
+
+Refer to the https://github.com/software-celo/ces-bsp-platform/tree/warrior[Christ platform manifest] on github for the first use.
+
+
+Contributing
+------------
+
+Feel free to contribute to our meta-ces layer.
+
+*Project:* https://github.com/software-celo/meta-ces.git
+
+*Support:* linux@christ-es.de
+
