@@ -16,7 +16,6 @@
 # This recipe structure was extracted from meta-fslc layer
 #
 
-SCMVERSION ??= "y"
 LOCALVERSION ??= "+fslc"
 
 UBOOT_LOCALVERSION = "${LOCALVERSION}"
@@ -41,15 +40,13 @@ S = "${WORKDIR}/git"
 
 do_compile_prepend() {
 
-	if [ "${SCMVERSION}" = "y" ]; then
-		# Add GIT revision to the local version
-		head=`cd ${S} ; git rev-parse --verify --short HEAD 2> /dev/null`
-		printf "%s%s%s" "${UBOOT_LOCALVERSION}" +g $head > ${S}/.scmversion
-		printf "%s%s%s" "${UBOOT_LOCALVERSION}" +g $head > ${B}/.scmversion
-    else
-		printf "%s" "${UBOOT_LOCALVERSION}" > ${S}/.scmversion
-		printf "%s" "${UBOOT_LOCALVERSION}" > ${B}/.scmversion
-	fi
+	# Add GIT revision to the local version
+	head=`cd ${S} ; git rev-parse --verify --short HEAD 2> /dev/null`
+
+	#Count all commits backwards from HEAD
+	commitcnt=`cd ${S} ; git rev-list --count HEAD`
+	printf "%s%s%s%s" "${UBOOT_LOCALVERSION}" "+ces-${DISTRO_CODENAME}-${DISTRO_VERSION}+c${commitcnt}" +g $head > ${S}/.scmversion
+	printf "%s%s%s%s" "${UBOOT_LOCALVERSION}" "+ces-${DISTRO_CODENAME}-${DISTRO_VERSION}+c${commitcnt}" +g $head > ${B}/.scmversion
 }
 
 BBCLASSEXTEND = "native"
