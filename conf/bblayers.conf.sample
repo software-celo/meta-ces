@@ -25,8 +25,6 @@ CES_LAYERS = " \
   "
 
 CES_BROWSER_DEPENDENCY_LAYERS = " \
-  ${BBLAYERS_DIR}/meta-clang \
-  ${BBLAYERS_DIR}/meta-browser \
   ${BBLAYERS_DIR}/meta-qt5 \
   "
 
