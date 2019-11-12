@@ -28,3 +28,5 @@ PACKAGECONFIG_remove_pn-opkg-utils = "python"
 # Customize SDK variables according to the selected distro
 SDK_NAME_PREFIX = "${DISTRO}"
 SDK_VERSION ?= "${DISTRO_VERSION}"
+
+TASK_BASIC_SSHDAEMON = "openssh-sshd openssh-sftp openssh-sftp-server"
