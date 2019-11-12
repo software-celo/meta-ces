@@ -35,4 +35,6 @@ CHRIST_UPDATE_ONLY_CUSTOM = "0"
 CHRIST_UPDATE_INCLUDE_CCLIB = "0"
 # CHRIST_UPDATE_CCLIB_FILE = "${THISDIR}/cclib.sh"
 
+IMAGE_FEATURES += "allow-root-login"
+
 export IMAGE_BASENAME = "ces-xfce-demoimage"

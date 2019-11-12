@@ -1,6 +1,10 @@
 # The reused default configuration from poky/meta-poky/conf/local.conf.sample
 PACKAGE_CLASSES ?= "package_rpm"
-EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+
+# Uncomment the next line for development purposes
+# but don't forget to remove debug-tweaks for production!
+# EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+
 USER_CLASSES ?= "buildstats image-mklibs image-prelink"
 PATCHRESOLVE = "noop"
 BB_DISKMON_DIRS ??= "\
