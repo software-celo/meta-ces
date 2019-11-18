@@ -10,7 +10,7 @@ PV = "2.0+gitr${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "6a6ad26f030ddbfb2494f394236c5dae787494a6"
+SRCREV = "5f4d740aeaf2a95e345df187a18c47443dcce97f"
 SRCBRANCH = "ces-qt-browser"
 
 SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH} \
