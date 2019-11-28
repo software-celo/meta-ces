@@ -17,6 +17,7 @@ LINUX_KERNEL_TYPE = "standard"
 KERNEL_IMAGETYPE = "zImage"
 
 KBRANCH ?= "linux-${LINUX_VERSION}-ces"
+KCONFIG_MODE ?= "alldefconfig"
 
 KBUILD_DEFCONFIG_ces-imx ?= "imx6_ces_defconfig"
 
