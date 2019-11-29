@@ -17,7 +17,7 @@ Currently only ces-fb is supported with ces-console-image and ces-qt-demoimage.
 Supported boards
 ----------------
 
-Not all machines are supported yet. The supported machines are listed below:
+Not all machines are fully supported yet. The supported machines are listed below:
 
 [width="100%",cols="^s,,,"]
 |===
@@ -68,25 +68,25 @@ Not all machines are supported yet. The supported machines are listed below:
 
 
 | blix-bdl100
-| tbd  :watch:
-| tbd  :watch:
+| supported :heavy_check_mark:
+| tbd :watch:
 | supported :heavy_check_mark:
 
 
 | blix-bq100
-| tbd  :watch:
-| tbd  :watch:
+| supported :heavy_check_mark:
+| tbd :watch:
 | supported :heavy_check_mark:
 
 
 | 4cbox-cdl100
-| tbd :watch:
+| supported :heavy_check_mark:
 | tbd :watch:
 | tbd :watch:
 
 
 | 4cbox-cdl200
-| tbd :watch:
+| supported :heavy_check_mark:
 | tbd :watch:
 | tbd :watch:
 
