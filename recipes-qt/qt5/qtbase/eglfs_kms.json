@@ -5,7 +5,7 @@
     "outputs": [
         {
             "name": "LVDS1",
-	    "format": "rgb565",
+	    "format": "rgb666",
 	    "touchDevice": "/dev/input/event1"
         }
     ]

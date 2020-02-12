@@ -1,0 +1,145 @@
+diff --git a/src/core/compositor/delegated_frame_node.cpp b/src/core/compositor/delegated_frame_node.cpp
+index 5f474cb..6373337 100644
+--- a/src/core/compositor/delegated_frame_node.cpp
++++ b/src/core/compositor/delegated_frame_node.cpp
+@@ -619,7 +619,7 @@ void DelegatedFrameNode::commit(const viz::CompositorFrame &pendingFrame,
+ 
+     QScopedPointer<DelegatedNodeTreeHandler> nodeHandler;
+ 
+-    const QSizeF viewportSizeInPt = apiDelegate->viewGeometry().size();
++    const QSizeF viewportSizeInPt = apiDelegate->viewportSize();
+     const QSizeF viewportSizeF = viewportSizeInPt * devicePixelRatio;
+     const QSize viewportSize(std::ceil(viewportSizeF.width()), std::ceil(viewportSizeF.height()));
+ 
+diff --git a/src/core/render_widget_host_view_qt_delegate.h b/src/core/render_widget_host_view_qt_delegate.h
+index 6066284..d3401ba 100644
+--- a/src/core/render_widget_host_view_qt_delegate.h
++++ b/src/core/render_widget_host_view_qt_delegate.h
+@@ -90,6 +90,7 @@ class Q_WEBENGINECORE_PRIVATE_EXPORT RenderWidgetHostViewQtDelegate {
+ public:
+     virtual ~RenderWidgetHostViewQtDelegate() { }
+     virtual void initAsPopup(const QRect&) = 0;
++    virtual QSizeF viewportSize() const { return viewGeometry().size(); }
+     virtual QRectF viewGeometry() const = 0;
+     virtual QRect windowGeometry() const = 0;
+     virtual void setKeyboardFocus() = 0;
+diff --git a/src/webengine/render_widget_host_view_qt_delegate_quick.cpp b/src/webengine/render_widget_host_view_qt_delegate_quick.cpp
+index 55ec19f..faedde3 100644
+--- a/src/webengine/render_widget_host_view_qt_delegate_quick.cpp
++++ b/src/webengine/render_widget_host_view_qt_delegate_quick.cpp
+@@ -88,10 +88,9 @@ RenderWidgetHostViewQtDelegateQuick::~RenderWidgetHostViewQtDelegateQuick()
+     QQuickWebEngineViewPrivate::bindViewAndWidget(nullptr, this);
+ }
+ 
+-void RenderWidgetHostViewQtDelegateQuick::initAsPopup(const QRect &r)
++void RenderWidgetHostViewQtDelegateQuick::initAsPopup(const QRect &rect)
+ {
+     Q_ASSERT(m_isPopup && parentItem());
+-    QRectF rect(parentItem()->mapRectFromScene(r));
+     setX(rect.x());
+     setY(rect.y());
+     setWidth(rect.width());
+@@ -99,6 +98,11 @@ void RenderWidgetHostViewQtDelegateQuick::initAsPopup(const QRect &r)
+     setVisible(true);
+ }
+ 
++QSizeF RenderWidgetHostViewQtDelegateQuick::viewportSize() const
++{
++    return size();
++}
++
+ QRectF RenderWidgetHostViewQtDelegateQuick::viewGeometry() const
+ {
+     // Transform the entire rect to find the correct top left corner.
+diff --git a/src/webengine/render_widget_host_view_qt_delegate_quick.h b/src/webengine/render_widget_host_view_qt_delegate_quick.h
+index 00158b3..d35300d 100644
+--- a/src/webengine/render_widget_host_view_qt_delegate_quick.h
++++ b/src/webengine/render_widget_host_view_qt_delegate_quick.h
+@@ -59,6 +59,7 @@ public:
+     ~RenderWidgetHostViewQtDelegateQuick();
+ 
+     void initAsPopup(const QRect&) override;
++    QSizeF viewportSize() const override;
+     QRectF viewGeometry() const override;
+     QRect windowGeometry() const override;
+     void setKeyboardFocus() override;
+diff --git a/src/webengine/render_widget_host_view_qt_delegate_quickwindow.cpp b/src/webengine/render_widget_host_view_qt_delegate_quickwindow.cpp
+index 3648df3..8acfe87 100644
+--- a/src/webengine/render_widget_host_view_qt_delegate_quickwindow.cpp
++++ b/src/webengine/render_widget_host_view_qt_delegate_quickwindow.cpp
+@@ -82,16 +82,38 @@ void RenderWidgetHostViewQtDelegateQuickWindow::initAsPopup(const QRect &screenR
+     popupRect = m_virtualParent->mapRectToScene(popupRect);
+     popupRect = mapRectToGlobal(m_virtualParent, popupRect);
+ 
+-    m_realDelegate->initAsPopup(QRect(QPoint(0, 0), popupRect.size().toSize()));
+-    popupRect.setSize(screenRect.size());
++    QTransform transform = m_virtualParent->itemTransform(nullptr, nullptr);
++    if (transform.type() > QTransform::TxTranslate) {
++        int rotate = 0;
++        qreal scale = 1.0;
++        QQuickItem *parent = m_virtualParent;
++        while (parent) {
++            rotate += parent->rotation();
++            scale *= parent->scale();
++            parent = parent->parentItem();
++        }
++        contentItem()->setTransformOrigin(QQuickItem::Center);
++        contentItem()->setScale(scale);
++        contentItem()->setRotation(rotate);
++    }
++    m_realDelegate->initAsPopup(QRect(QPoint(0, 0), screenRect.size()));
+     setGeometry(popupRect.toAlignedRect());
+     raise();
+     show();
+ }
+ 
++QSizeF RenderWidgetHostViewQtDelegateQuickWindow::viewportSize() const
++{
++    return size();
++}
++
+ QRectF RenderWidgetHostViewQtDelegateQuickWindow::viewGeometry() const
+ {
+-    return geometry();
++    QRectF popupRect(geometry());
++    popupRect = mapRectFromGlobal(m_virtualParent, popupRect);
++    popupRect = m_virtualParent->mapRectToScene(popupRect);
++    popupRect = mapRectToGlobal(m_virtualParent, popupRect);
++    return popupRect;
+ }
+ 
+ QRect RenderWidgetHostViewQtDelegateQuickWindow::windowGeometry() const
+@@ -159,13 +181,18 @@ void RenderWidgetHostViewQtDelegateQuickWindow::updateCursor(const QCursor &curs
+ 
+ void RenderWidgetHostViewQtDelegateQuickWindow::resize(int width, int height)
+ {
+-    QQuickWindow::resize(width, height);
+-    m_realDelegate->resize(width, height);
++    QRectF popupRect(0, 0, width, height);
++    popupRect = m_virtualParent->mapRectToScene(popupRect);
++    QSize popupSize = popupRect.toAlignedRect().size();
++
++    QQuickWindow::resize(popupSize.width(), popupSize.height());
++    m_realDelegate->resize(popupSize.width(), popupSize.height());
+ }
+ 
+ void RenderWidgetHostViewQtDelegateQuickWindow::move(const QPoint &screenPos)
+ {
+-    QRectF popupRect(screenPos, size());
++    QSizeF popupSize = m_virtualParent->mapRectToScene(QRectF(0, 0, width(), height())).size();
++    QRectF popupRect(screenPos, popupSize);
+     popupRect = mapRectFromGlobal(m_virtualParent, popupRect);
+     popupRect = m_virtualParent->mapRectToScene(popupRect);
+     popupRect = mapRectToGlobal(m_virtualParent, popupRect);
+diff --git a/src/webengine/render_widget_host_view_qt_delegate_quickwindow.h b/src/webengine/render_widget_host_view_qt_delegate_quickwindow.h
+index ab583bd..7b1c34f 100644
+--- a/src/webengine/render_widget_host_view_qt_delegate_quickwindow.h
++++ b/src/webengine/render_widget_host_view_qt_delegate_quickwindow.h
+@@ -56,6 +56,7 @@ public:
+     ~RenderWidgetHostViewQtDelegateQuickWindow();
+ 
+     void initAsPopup(const QRect&) override;
++    QSizeF viewportSize() const override;
+     QRectF viewGeometry() const override;
+     QRect windowGeometry() const override;
+     void setKeyboardFocus() override {}

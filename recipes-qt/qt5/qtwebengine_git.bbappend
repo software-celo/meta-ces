@@ -4,6 +4,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebengine:"
 
 SRC_URI_append = " \
     file://quicknanobrowser.desktop \
+    file://0001-WIP-transform-popups-webengineview.patch \
 "
 
 do_install_append (){
