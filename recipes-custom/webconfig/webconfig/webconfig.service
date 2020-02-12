@@ -1,5 +1,6 @@
 [Unit]
 Description=Autostart Christ Webconfiguration Interface
+Before=qtbrowser-autostart.service
 
 [Service]
 Type=simple

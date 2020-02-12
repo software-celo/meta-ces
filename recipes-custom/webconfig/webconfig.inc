@@ -1,10 +1,10 @@
 SUMMARY  = "Christ Webconfiguration Interface"
-DESCRIPTION = "Small nodejs based html webconfiguration interface for devicesettings on Christ iMX6 based platforms"
+DESCRIPTION = "Small nodejs based html webconfiguration interface for devicesettings on Christ linux based platforms"
 AUTHOR = "Steffen Kothe <skothe@christ-es.de>"
 HOMEPAGE = "https://www.christ-es.de"
 LICENSE = "MIT"
 SECTION = "web"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=1bcb54d6f4877c88b3a20f836d45f56c"
+LIC_FILES_CHKSUM ?= "file://LICENSE;md5=e65f866ca692a5385dd4ebea623fa3fa"
 
 PR = "r0"
 FILESEXTRAPATHS_prepend := "${THISDIR}/webconfig:"
@@ -70,11 +70,13 @@ do_install (){
 		${D}${sysconfdir}/systemd/system/multi-user.target.wants	
 
 	#Install backend files and webconfig to image
-	cp -a ${S}/server/backend/pixi-crix/. ${D}${BACKEND_PATH}
+	cp -a ${S}/server/backend/common-linux-bcknd/. ${D}${BACKEND_PATH}
 	chmod 744 -R ${D}${BACKEND_PATH} 
 	cp -a ${S}/server/default_config_files/. ${D}${CONFIGFILE_PATH}
 	install -m 0000 ${S}/server/default_config_files/login.json ${D}${DEFAULT_SAVE_PATH}
 	cp -a ${S}/dist/. ${D}${WEBCONFIG_PATH}
+
+	install -d ${D}/usr/local/share/ca-certificates
 
 	install_custom_oem	
 	install_localpage
@@ -146,6 +148,7 @@ FILES_${PN} = " \
 	${DEFAULT_SAVE_PATH} \
 	${systemd_unitdir}/system \
 	${sysconfdir}/systemd/system/multi-user.target.wants \
+	/usr/local/share/ca-certificates \
 "
 
 #Dependencies for runtime
@@ -157,6 +160,8 @@ RDEPENDS_${PN} += " \
 	bash \
 	grep \
 	ces-qt-browser (>=2.0) \
+	util-linux-lsblk \
+	curl \
 "
 
 #Dependencies for compiling/building
