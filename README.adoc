@@ -12,7 +12,7 @@ Official https://www.christ-es.de[Christ Electronic Systems GmbH] BSP Yocto Proj
 Supported distros & images
 --------------------------
 
-Currently only ces-fb is supported with ces-console-image and ces-qt-demoimage.
+Currently only ces-fb is supported with ces-console-demoimage and ces-qt-demoimage.
 
 Supported boards
 ----------------
