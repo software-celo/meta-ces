@@ -38,50 +38,74 @@ WEBCONFIG_PATH = "${bindir}/webconfig"
 CLIENT_PATH  = "${WEBCONFIG_PATH}/client"
 WEBCONFIG_LOCAL_PATH = "${datadir}/webconfig/local"
 DEFAULT_SAVE_PATH = "${sysconfdir}/default"
- 
-do_compile (){
-	#Download modules for webconfig
-	npm install
-	
-	#Compile webconfig
-	npm run build
+CA_CERTS_LOCAL_PATH = "/usr/local/share/ca-certificates"
 
-	#Removes not needed packages for production build 
+# Description:
+#	Since the fetch step does not return a human readable format,
+#	this function ensures the abort of the fetch step in case
+#	of missing WEBCONFIG_SRC_URI with a meaningful message.
+#
+#	This function only validates if the variable was set or not and
+#	does not check the correctnes of the content.
+#
+do_webconfig_uri_check(){
+
+	if [ -v ${WEBCONFIG_SRC_URI} ];then
+		bbfatal "WEBCONFIG_SRC_URI is not set!"
+	fi
+
+}
+do_fetch[prefuncs] += "do_webconfig_uri_check"
+
+do_compile (){
+
+	npm install
+	npm run build
 	npm prune --production
+
 }
 
-
 do_install (){
-	
+
 	#Install standardpaths for webconfig
 	install -d ${D}${BACKEND_PATH}		#/usr/sbin
 	install -d ${D}${CONFIGFILE_PATH}	#/etc/webconfig
-	install -d ${D}${WEBCONFIG_PATH}	#/bin/webconfig
+	install -d ${D}${WEBCONFIG_PATH}	#/usr/bin/webconfig
+	install -d ${D}${WEBCONFIG_PATH}/server	#/usr/bin/webconfig/server
 	install -d ${D}${WEBCONFIG_LOCAL_PATH}  #/usr/share/webconfig/local
 	install -d ${D}${DEFAULT_SAVE_PATH}	#/etc/default
+	install -d ${D}${CA_CERTS_LOCAL_PATH}	#/usr/local/share/ca-certificates
 
-	#Install default systemd paths for services
 	install -d ${D}${systemd_unitdir}/system
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
 
-	#Install webconfig service
 	install -m 0644 ${WORKDIR}/webconfig.service ${D}${systemd_unitdir}/system
 	ln -sf ${D}${systemd_unitdir}/system/webconfig.service \
-		${D}${sysconfdir}/systemd/system/multi-user.target.wants	
+		${D}${sysconfdir}/systemd/system/multi-user.target.wants
 
-	#Install backend files and webconfig to image
 	cp -a ${S}/server/backend/common-linux-bcknd/. ${D}${BACKEND_PATH}
-	chmod 744 -R ${D}${BACKEND_PATH} 
+	chmod 744 -R ${D}${BACKEND_PATH}
 	cp -a ${S}/server/default_config_files/. ${D}${CONFIGFILE_PATH}
 	install -m 0000 ${S}/server/default_config_files/login.json ${D}${DEFAULT_SAVE_PATH}
-	cp -a ${S}/dist/. ${D}${WEBCONFIG_PATH}
 
-	install -d ${D}/usr/local/share/ca-certificates
+	cp -R ${S}/dist/client ${D}${WEBCONFIG_PATH}
 
-	install_custom_oem	
+	install -m 0644 ${S}/dist/server/main.bundle.js ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/build_license/client_license.json ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/build_license/server_license.json ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/build_license/LICENSE.webconfig ${D}${WEBCONFIG_PATH}/server/
+
+	install -m 0644 ${S}/dist/server/favicon-16x16.png ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/dist/server/favicon-32x32.png ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/dist/server/swagger.json ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/dist/server/swagger-ui-bundle.js ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/dist/server/swagger-ui.css ${D}${WEBCONFIG_PATH}/server/
+	install -m 0644 ${S}/dist/server/swagger-ui-standalone-preset.js ${D}${WEBCONFIG_PATH}/server/
+
+	install_custom_oem
 	install_localpage
-}
 
+}
 
 install_custom_oem () {
 
@@ -121,10 +145,10 @@ install_custom_oem () {
 	else
 		bbnote "Leave default webconfig logo"
 	fi
+
 }
 
 install_localpage() {
-	#Install local page for webconfig
 
 	if [ "${STANDARD_LOCAL_PAGE}" = "true" ]; then
 		bbnote "Install default localpage"
@@ -135,15 +159,20 @@ install_localpage() {
 		install -m 0644 ${WORKDIR}/index.html ${D}${WEBCONFIG_LOCAL_PATH}
 		install -m 0644 ${WORKDIR}/script.js ${D}${WEBCONFIG_LOCAL_PATH}
 		install -m 0644 ${WORKDIR}/style.css ${D}${WEBCONFIG_LOCAL_PATH}
-	else 
+	else
 		bbnote  "Do not install default localpage"
 	fi
+
 }
 
 FILES_${PN} = " \
 	${BACKEND_PATH} \
 	${CONFIGFILE_PATH}  \
-	${WEBCONFIG_PATH} \
+	${WEBCONFIG_PATH}/client \
+	${WEBCONFIG_PATH}/server/main.bundle.js \
+	${WEBCONFIG_PATH}/server/client_license.json \
+	${WEBCONFIG_PATH}/server/server_license.json \
+	${WEBCONFIG_PATH}/server/LICENSE.webconfig \
 	${WEBCONFIG_LOCAL_PATH} \
 	${DEFAULT_SAVE_PATH} \
 	${systemd_unitdir}/system \
@@ -151,11 +180,9 @@ FILES_${PN} = " \
 	/usr/local/share/ca-certificates \
 "
 
-#Dependencies for runtime
 RDEPENDS_${PN} += " \
-	nodejs (>= 7.10.0) \
-	busybox (>= 1.24.1) \
-	nodejs-npm \
+	nodejs (>= 10.15.3) \
+	busybox (>= 1.30.1) \
 	systemd \
 	bash \
 	grep \
@@ -164,5 +191,26 @@ RDEPENDS_${PN} += " \
 	curl \
 "
 
-#Dependencies for compiling/building
-DEPENDS_${PN} = "nodejs-native"
+DEPENDS += " \
+	nodejs-native \
+	license-checker-native \
+"
+
+LICENSE_${PN}-swagger-doc = "MIT"
+
+FILES_${PN}-swagger-doc += " \
+	${WEBCONFIG_PATH}/server/favicon-16x16.png \
+	${WEBCONFIG_PATH}/server/favicon-32x32.png \
+	${WEBCONFIG_PATH}/server/swagger.json \
+	${WEBCONFIG_PATH}/server/swagger-ui-bundle.js \
+	${WEBCONFIG_PATH}/server/swagger-ui.css \
+	${WEBCONFIG_PATH}/server/swagger-ui-standalone-preset.js \
+"
+
+PACKAGES =+ " \
+	${PN}-swagger-doc \
+"
+
+RDEPENDS_${PN}-swagger-doc += " \
+	${PN} \
+"
