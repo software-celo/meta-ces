@@ -1,0 +1,187 @@
+License Manifest Generator
+
+    This introduced class extension for image creation is able to autogenerate license manifests
+    from the Yocto build system in different formats like xml, html, pdf & json.
+
+    Licenses are scanned from the common directories of the selected package manager
+    and the created rootfs.
+
+    The license collection includes NPM modules (if available), generic license texts,
+    specific copyright & license information, used versions and also packages/modules marked
+    as 'CLOSED'.
+
+    Basic information of the system & machine will be collected as well.
+
+    -----------------------------------------------------------------------------------------------
+
+    Functionality:
+
+                                    ... generation process / compiling and so on
+                                    |
+                                    |
+                                    do_rootfs
+                                    |
+                                    |
+    LIC_XML_MANIFEST                do_license_xml_manifest
+                                    |
+                                    |
+                                    do_license_xml_transform
+                                    |
+                                    |
+    LIC_DISABLE_HTML_TO_PDF         do_license_manifest_html_to_pdf
+                                    |
+                                    |
+                                    do_license_manifest_deploy
+                                    |
+                                    |
+                                    ... create final image
+
+    do_license_xml_manifest:
+        This function collects:
+                - all packages and modules with their belonging license information
+                - generic license texts assigned to every Yocto generated package
+                - a list of basic information about the distro, machine, image, imagelicense etc.
+
+        At the end of the collection process, a well-formed xml file is written in the
+        ${WORKDIR}/license-rootfs-manifest directory of the image.
+        The file always conforms to the following naming style:
+                Style:
+                        ${IMAGE_BASENAME}-manifest.xml
+
+                Example:
+                        ces-webconfig-image-manifest.xml
+
+            Note:
+                This function, if activated, always recreates the license manifest.
+                Since Yocto does a lot with stamps, it's a kind of security feature
+                to recreate this file everytime.
+
+    do_license_xml_transform:
+        This function converts the xml manifest file to a different document type.
+        These files are called .xsl(t) and perform a transformation to another representation
+        of data.
+
+            The common transformation file is path-fixed and not changeable anymore.
+            That's the Christ Electronic Systems GmbH standard document and creates a pretty
+            formatted html-document.
+
+            Every specific transformation file is automatically searched in the recipe directory
+            of the image in the directory "license-transform".
+            As long as the file has an ending *.xsl or *.xslt, the class tries to perform a
+            transformation with this file and tries to figure out, what kind of document will
+            be generated.
+            If the transformed documentation type is not detectable, the file will be saved with
+            the ending '.unknown'.
+
+            Currently supported is the autodetection of:
+                    - html
+                    - json
+                    - (well-formed) xml
+
+            Every transformed file gets the basename of the corresponding transformation file.
+                    Example:
+
+                    ces-base-license.xsl --> ces-base-license.html
+                    customer-license.xsl --> customer-license.html
+
+            Warning:
+                    Transformation files with the same basename (not extension sensitive!) will
+                    raise a fatal error.
+
+    do_license_manifest_html_to_pdf:
+            This function performs the printing of html content to pdf. As module, weasyprint
+            is used for this task.
+            Be aware, that the host python, which is running bitbake, requires this module.
+            A warning will occur, if this module is not available on the host system. This case
+            forces the use of nativepython from sysroot.
+            Ignore this warning, if you do not want to install weasyprint on the host system.
+
+            The naming of the pdf documents is like in do_license_xml_transform based on the
+            file basenames.
+
+            Example:
+
+                    ces-base-license.html --> ces-base-license.pdf
+                    customer-license.html --> customer-license.pdf
+
+            This tasks is autoactive as long as the control variable is not set properly.
+
+    do_license_manifest_deploy:
+            The deployment task uses the variables LIC_DEPLOY_BY_EXTENSION & LIC_DEPLOY_BY_FILENAME
+            to determine, which files are shipped to the final image. Read the "How to use" section
+            about more details.
+
+            The deployment directory in the rootfs of the final image is always:
+
+                    /usr/share/common-licenses/license-rootfs-manifest
+
+            Be careful with the shipping of files, because the sizes of this manifest may easily
+            reach 50Mb per file.
+
+    -----------------------------------------------------------------------------------------------
+
+    How to use:
+
+    Put LIC_XML_MANIFEST variable in the recipe of an image to generate the xml,html and pdf
+    license manifest documents.
+
+    LIC_XML_MANIFEST is the masterswitch for all do_license_* functions. If not active,
+    no license informations will be collected or listed in any documents, nor will anything be
+    shipped to a productive image.
+
+    Activate:
+
+            LIC_XML_MANIFEST = "1"
+
+    Default:
+            LIC_XML_MANIFEST ?= "0"
+
+    -----------------------------------------------------------------------------------------------
+
+    Put LIC_DISABLE_HTML_TO_PDF variable in the recipe of an image to skip the generation of pdf
+    documents from html-documents by default.
+
+    Disable pdf generation:
+
+            LIC_DISABLE_HTML_TO_PDF = "1"
+
+    Default:
+            LIC_DISABLE_HTML_TO_PDF ?= "0"
+
+    -----------------------------------------------------------------------------------------------
+
+    LIC_DEPLOY_BY_EXTENSION and LIC_DEPLOY_BY_FILE allow to control the deployment of files in the
+    final image.
+
+    Default:
+             LIC_DEPLOY_BY_FILENAME ?= " \
+                    ces-license-base.html \
+                    ces-license-base.pdf \
+                           ${IMAGE_BASENAME}-manifest.xml \
+             "
+
+            LIC_DEPLOY_BY_EXT ?= ""
+
+    LIC_DEPLOY_BY_EXT requires a seperated listed with extensions. Extensions without punctuation
+    mark will raise an error.
+
+    Example:
+
+            LIC_DEPLOY_BY_EXT ?= " \
+                    .pdf \
+                    .html \
+            "
+
+    Warning:
+            LIC_DEPLOY_BY_EXT and LIC_DEPLOY_BY_FILENAME do not conflict with each other. If both
+            variables are set, not required files could be deployed to the image.
+            The recommended way is to list the required files with LIC_DEPLOY_BY_FILENAME.
+
+            Since it is not possible to autodetect all generated file types before, the use of
+            this variables is a "Know what you generate and need" process.
+            This means that you should know what files are generated and that you have to list
+            them conforming to the required naming convention.
+            Read the section 'Functionality' to understand the generation and transformation
+            process for every file.
+
+    -----------------------------------------------------------------------------------------------
