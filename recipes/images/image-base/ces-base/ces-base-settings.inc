@@ -14,6 +14,7 @@ IMAGE_POSTPROCESS_COMMAND = "rootfs_update_timestamp"
                                                      
 #create the deployment directory-tree
 require christ-image-fstype.inc
+require ces-license-xml-manifest.inc
                                                      
 DEPENDS_append = " virtual/bootloader"
                                                      
