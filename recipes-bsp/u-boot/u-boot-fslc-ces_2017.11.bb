@@ -3,7 +3,7 @@
 # This recipe structure was reused from meta-fslc layer
 #
 
-require recipes-bsp/u-boot/u-boot.inc
+require u-boot.inc
 require u-boot-fslc-ces-common_${PV}.inc
 
 DESCRIPTION = "U-Boot based on mainline U-Boot used by FSL Community BSP in \
