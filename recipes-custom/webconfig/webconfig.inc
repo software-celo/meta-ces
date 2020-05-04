@@ -71,6 +71,7 @@ do_install (){
 	install -d ${D}${BACKEND_PATH}		#/usr/sbin
 	install -d ${D}${CONFIGFILE_PATH}	#/etc/webconfig
 	install -d ${D}${WEBCONFIG_PATH}	#/usr/bin/webconfig
+	install -d ${D}${CLIENT_PATH}		#/usr/bin/webconfig/client
 	install -d ${D}${WEBCONFIG_PATH}/server	#/usr/bin/webconfig/server
 	install -d ${D}${WEBCONFIG_LOCAL_PATH}  #/usr/share/webconfig/local
 	install -d ${D}${DEFAULT_SAVE_PATH}	#/etc/default
@@ -83,12 +84,13 @@ do_install (){
 	ln -sf ${systemd_unitdir}/system/webconfig.service \
 		${D}${sysconfdir}/systemd/system/multi-user.target.wants
 
-	cp -a ${S}/server/backend/common-linux-bcknd/. ${D}${BACKEND_PATH}
-	chmod 744 -R ${D}${BACKEND_PATH}
-	cp -a ${S}/server/default_config_files/. ${D}${CONFIGFILE_PATH}
+	install -m 744 ${S}/server/backend/common-linux-bcknd/* ${D}${BACKEND_PATH}
+	install -m 644 ${S}/server/default_config_files/* ${D}${CONFIGFILE_PATH}
 	install -m 0000 ${S}/server/default_config_files/login.json ${D}${DEFAULT_SAVE_PATH}
 
-	cp -R ${S}/dist/client ${D}${WEBCONFIG_PATH}
+	find ${S}/dist/client/ -name "*" -maxdepth 1 -type f -exec install -m 644 {} ${D}${CLIENT_PATH} \;
+	install -d ${D}${CLIENT_PATH}/images_icons
+	install -m 644 ${S}/dist/client/images_icons/* ${D}${CLIENT_PATH}/images_icons
 
 	install -m 0644 ${S}/dist/server/main.bundle.js ${D}${WEBCONFIG_PATH}/server/
 	install -m 0644 ${S}/build_license/client_license.json ${D}${WEBCONFIG_PATH}/server/
