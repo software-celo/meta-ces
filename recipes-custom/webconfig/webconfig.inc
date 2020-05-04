@@ -80,7 +80,7 @@ do_install (){
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
 
 	install -m 0644 ${WORKDIR}/webconfig.service ${D}${systemd_unitdir}/system
-	ln -sf ${D}${systemd_unitdir}/system/webconfig.service \
+	ln -sf ${systemd_unitdir}/system/webconfig.service \
 		${D}${sysconfdir}/systemd/system/multi-user.target.wants
 
 	cp -a ${S}/server/backend/common-linux-bcknd/. ${D}${BACKEND_PATH}
