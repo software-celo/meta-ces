@@ -10,5 +10,6 @@ do_install_append() {
 	# for instance by running "localectl", but at build time the best
 	# way is to install /etc/machine-id and /etc/locale.conf together.
 
+	install -d ${D}${sysconfdir}
 	echo "LANG=de_DE.utf8" > ${D}${sysconfdir}/locale.conf
 }
