@@ -53,6 +53,8 @@ fakeroot do_imagedeploy() {
             if [ -e "${CHRIST_UPDATE_CUSTOM_FILE}" ]; then
                 cp "${CHRIST_UPDATE_CUSTOM_FILE}" ${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh
                 CUSTOM_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/custom.sh"
+            else
+                bberror "custom.sh not found at ${CHRIST_UPDATE_CUSTOM_FILE}"
             fi
         fi
     fi
@@ -63,6 +65,8 @@ fakeroot do_imagedeploy() {
             if [ -e "${CHRIST_UPDATE_CCLIB_FILE}" ]; then
                 cp "${CHRIST_UPDATE_CCLIB_FILE}" ${IMAGE_ROOTFS}/../${MACHINE}_bin/cclib.sh
                 CCLIB_FILE="${IMAGE_ROOTFS}/../${MACHINE}_bin/cclib.sh"
+            else
+                bberror "cclib.sh not found at ${CHRIST_UPDATE_CCLIB_FILE}"
             fi
         fi
     fi
