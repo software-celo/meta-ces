@@ -4,5 +4,5 @@ PACKAGECONFIG_remove += "rfkill randomseed quotacheck bootchart hibernate ima sm
 do_install_append() {
 #	rm ${D}${sysconfdir}/systemd/system/getty.target.wants/getty@tty1.service
 #	rm ${D}${systemd_unitdir}/system/getty@.service
-	sed -i "s/MountFlags=slave/MountFlags=shared/g" ${D}${systemd_unitdir}/system/systemd-udevd.service
+	sed -i "s/PrivateMounts=yes/PrivateMounts=no/g" ${D}${systemd_unitdir}/system/systemd-udevd.service
 }
