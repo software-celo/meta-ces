@@ -15,9 +15,12 @@ WEBCONFIG_SRC_URI ?= ""
 
 inherit npm
 
+WEBCONFIG_SRC_BRANCH ?= "master"
+WEBCONFIG_SRC_PROTOCOL ?= "ssh"
+
 S = "${WORKDIR}/git"
 SRC_URI = " \
-	${WEBCONFIG_SRC_URI} \
+	${WEBCONFIG_SRC_URI};branch=${WEBCONFIG_SRC_BRANCH};protocol=${WEBCONFIG_SRC_PROTOCOL} \
 	file://webconfig.service \
 	file://footer.png \
 	file://header-logo-center.png \
