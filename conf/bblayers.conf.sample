@@ -1,6 +1,6 @@
 # POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
 # changes incompatibly
-POKY_BBLAYERS_CONF_VERSION = "2"
+POKY_BBLAYERS_CONF_VERSION = "3"
 
 BBPATH = "${TOPDIR}"
 BBFILES ?= ""
@@ -12,31 +12,40 @@ YOCTO_LAYERS = " \
   ${BBLAYERS_DIR}/poky/meta-poky \
   "
 
-CES_CORE_DEPENDENCY_LAYERS = " \
+CES_CORE_LAYERS = " \
   ${BBLAYERS_DIR}/meta-openembedded/meta-oe \
   ${BBLAYERS_DIR}/meta-openembedded/meta-filesystems \
   ${BBLAYERS_DIR}/meta-openembedded/meta-multimedia \
   ${BBLAYERS_DIR}/meta-openembedded/meta-networking \
   ${BBLAYERS_DIR}/meta-openembedded/meta-python \
+  ${BBLAYERS_DIR}/meta-python2 \
+  ${BBLAYERS_DIR}/meta-virtualization \
+  ${BBLAYERS_DIR}/meta-security/meta-tpm \
+  "
+
+CES_RAUC_LAYERS = " \
+  ${BBLAYERS_DIR}/meta-rauc \
+  ${BBLAYERS_DIR}/meta-ces-rauc \
   "
 
 CES_LAYERS = " \
   ${BBLAYERS_DIR}/meta-ces \
   "
 
-CES_BROWSER_DEPENDENCY_LAYERS = " \
+CES_QT5_LAYERS = " \
   ${BBLAYERS_DIR}/meta-qt5 \
   "
 
-CES_HW_DEPENDENCY_LAYERS = " \
+CES_HW_LAYERS = " \
   ${BBLAYERS_DIR}/meta-freescale \
   "
 
 BBLAYERS ?= " \
   ${YOCTO_LAYERS} \
-  ${CES_CORE_DEPENDENCY_LAYERS} \
-  ${CES_HW_DEPENDENCY_LAYERS} \
-  ${CES_BROWSER_DEPENDENCY_LAYERS} \
+  ${CES_CORE_LAYERS} \
+  ${CES_HW_LAYERS} \
+  ${CES_QT5_LAYERS} \
+  ${CES_RAUC_LAYERS} \
   ${CES_LAYERS} \
   "
 
