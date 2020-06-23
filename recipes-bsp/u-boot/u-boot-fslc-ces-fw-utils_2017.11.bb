@@ -10,7 +10,7 @@ EXTRA_OEMAKE_class-cross = 'ARCH=${TARGET_ARCH} CC="${CC} ${CFLAGS} ${LDFLAGS}" 
 inherit uboot-config
 
 SRC_URI += " \
-	file://0002-fw-env-config.patch \
+	${@bb.utils.contains('DISTRO_FEATURES', 'rauc', 'file://0002-fw-env-config-rauc.patch', 'file://0002-fw-env-config.patch', d)} \
 "
 
 do_compile () {
