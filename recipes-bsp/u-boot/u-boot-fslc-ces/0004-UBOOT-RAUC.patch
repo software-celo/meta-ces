@@ -1,0 +1,585 @@
+From 2b14335cfc0d2c66fe0f43581bebd7ee2aba6290 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Wed, 13 Mar 2019 08:54:52 +0100
+Subject: [PATCH 1/9] configs: mx6ces_common: implement environment suitable
+ for rauc
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ include/configs/mx6ces_common.h | 48 +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 4 deletions(-)
+
+diff --git a/include/configs/mx6ces_common.h b/include/configs/mx6ces_common.h
+index 25470b0..c2953ed 100644
+--- a/include/configs/mx6ces_common.h
++++ b/include/configs/mx6ces_common.h
+@@ -47,6 +47,8 @@
+ 
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"script=boot.img\0" \
++	"image_prefix=/boot/\0"\
++	"fdt_prefix=/boot/\0" \
+ 	"image=zImage\0" \
+ 	"fdt_addr=0x18000000\0" \
+ 	"curt_file=curt.itb\0" \
+@@ -61,9 +63,11 @@
+ 	"mmcpart=1\0" \
+ 	"usbdev=0\0" \
+ 	"usbpart=1\0" \
+-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
++	"mmcroot=" CONFIG_MMCROOT "\0" \
++	"mmcpart=1\0" \
+ 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+-		"root=${mmcroot}; " \
++		"root=${mmcroot}p${mmcpart} rootwait rw " \
++		"rauc.slot=${raucslot} " \
+ 		"setenv boottype mmc; " \
+ 		"setenv bootdev ${mmcdev}; " \
+ 		"setenv bootpart ${mmcpart}\0" \
+@@ -76,8 +80,8 @@
+ 		"fatload ${boottype} ${bootdev}:${bootpart} ${loadaddr} ${script}\0" \
+ 	"bootscript=echo Running bootscript from mmc ...; " \
+ 		"source ${loadaddr}\0" \
+-	"loadimage=fatload mmc ${bootdev}:${bootpart} ${loadaddr} ${image}\0" \
+-	"loadfdt=fatload mmc ${bootdev}:${bootpart} ${fdt_addr} ${fdt_file} && fdt addr ${fdt_addr}\0" \
++	"loadimage=ext4load mmc ${bootdev}:${bootpart} ${loadaddr} ${image_prefix}${image}\0" \
++	"loadfdt=ext4load mmc ${bootdev}:${bootpart} ${fdt_addr} ${fdt_prefix}${fdt_file} && fdt addr ${fdt_addr}\0" \
+ 	"updatefdt=fdt addr ${fdt_addr} && fdt resize 100 && fdt memory ${ddr_addr} ${ddr_size}\0" \
+ 	"setdisplay=run cmd_lvds; run cmd_hdmi; run cmd_lcd\0" \
+ 	"mmcboot=echo Booting from ${boottype} ...; " \
+@@ -99,6 +103,36 @@
+ 		"run setdisplay; " \
+ 		"bootm prep; " \
+ 		"bootm go\0" \
++	"raucargs=test -n \"${BOOT_ORDER}\" || setenv BOOT_ORDER \"A B\"; " \
++		"test -n \"${BOOT_A_LEFT}\" || setenv BOOT_A_LEFT 3; " \
++		"test -n \"${BOOT_B_LEFT}\" || setenv BOOT_B_LEFT 3; " \
++		"setenv raucslot; " \
++		"for BP in ${BOOT_ORDER}; do " \
++			"if test \"x${raucslot}\" != \"x\"; then; " \
++			"elif test \"x${BP}\" = \"xA\"; then " \
++				"if test ${BOOT_A_LEFT} -gt 0; then " \
++					"setexpr BOOT_A_LEFT ${BOOT_A_LEFT} - 1; " \
++					"echo \"Found valid slot A, ${BOOT_A_LEFT} attempts remaining\"; " \
++					"setenv mmcpart 1; " \
++					"setenv raucslot A; " \
++				"fi; " \
++			"elif test \"x${BP}\" = \"xB\"; then " \
++				"if test ${BOOT_B_LEFT} -gt 0; then " \
++					"setexpr BOOT_B_LEFT ${BOOT_B_LEFT} - 1; " \
++					"echo \"Found valid slot B, ${BOOT_B_LEFT} attempts remaining\"; " \
++					"setenv mmcpart 2; " \
++					"setenv raucslot B; " \
++				"fi; " \
++			"fi; " \
++		"done; " \
++		"if test -n \"${raucslot}\"; then " \
++			"saveenv; " \
++		"else echo \"No valid slot found, resetting tries to 3\"; " \
++			"setenv BOOT_A_LEFT 3; " \
++			"setenv BOOT_B_LEFT 3; " \
++			"saveenv; " \
++			"reset; " \
++		"fi\0" \
+ 
+ #define CONFIG_BOOTCOMMAND \
+ 	"setenv recovery 0; " \
+@@ -119,6 +153,7 @@
+ 			"fi; " \
+ 		"fi; " \
+ 	"fi; " \
++	"run raucargs; " \
+ 	"run mmcargs; " \
+ 	"mmc dev ${bootdev}; " \
+ 	"if mmc rescan; then " \
+@@ -161,6 +196,11 @@
+ #define CONFIG_SYS_QE_FMAN_FW_LENGTH	0x10000
+ #define CONFIG_SYS_FDT_PAD		(0x3000 + CONFIG_SYS_QE_FMAN_FW_LENGTH)
+ 
++#if defined(CONFIG_SYS_CBSIZE)
++#undef CONFIG_SYS_CBSIZE
++#endif
++#define CONFIG_SYS_CBSIZE      1024
++
+ /* I2C & EEPROM Configs */
+ #define CONFIG_SYS_I2C
+ #define CONFIG_SYS_I2C_MXC
+-- 
+2.7.4
+
+
+From bffb87a8bd4f882f40ac139f7406533e0db5bd36 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:37:00 +0200
+Subject: [PATCH 2/9] 4cbox-cx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/4cbox-cx/4cbox-cx.c | 6 ++++++
+ include/configs/4cbox-cx.h       | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/4cbox-cx/4cbox-cx.c b/board/christ/4cbox-cx/4cbox-cx.c
+index 96e5490..0b264fb 100644
+--- a/board/christ/4cbox-cx/4cbox-cx.c
++++ b/board/christ/4cbox-cx/4cbox-cx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -599,6 +600,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/4cbox-cx.h b/include/configs/4cbox-cx.h
+index 789c396..545ff98 100644
+--- a/include/configs/4cbox-cx.h
++++ b/include/configs/4cbox-cx.h
+@@ -17,7 +17,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk1"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -40,7 +40,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	2
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From 1bb7eb8dc6f7cb4e1135d4f6aac99cea62427dd6 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:40:30 +0200
+Subject: [PATCH 3/9] blix-bx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/blix-bx/blix-bx.c | 6 ++++++
+ include/configs/blix-bx.h      | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/blix-bx/blix-bx.c b/board/christ/blix-bx/blix-bx.c
+index f55d9cb..586e24b 100644
+--- a/board/christ/blix-bx/blix-bx.c
++++ b/board/christ/blix-bx/blix-bx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -616,6 +617,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/blix-bx.h b/include/configs/blix-bx.h
+index 19d018f..003f35b 100644
+--- a/include/configs/blix-bx.h
++++ b/include/configs/blix-bx.h
+@@ -17,7 +17,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk1"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -40,7 +40,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	2
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From 0e83f817575706c07a0cca95477052e06e7f5f65 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:41:34 +0200
+Subject: [PATCH 4/9] crix-arx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/crix-arx/crix-arx.c | 6 ++++++
+ include/configs/crix-arx.h       | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/crix-arx/crix-arx.c b/board/christ/crix-arx/crix-arx.c
+index a336339..3442d40 100644
+--- a/board/christ/crix-arx/crix-arx.c
++++ b/board/christ/crix-arx/crix-arx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -666,6 +667,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/crix-arx.h b/include/configs/crix-arx.h
+index 88b75d4..35f4815 100644
+--- a/include/configs/crix-arx.h
++++ b/include/configs/crix-arx.h
+@@ -17,7 +17,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk1"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -40,7 +40,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	2
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From aa8de87bb51753e9d79135d1dd1fbfa91a550b73 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:41:49 +0200
+Subject: [PATCH 5/9] crix-cx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/crix-cx/crix-cx.c | 6 ++++++
+ include/configs/crix-cx.h      | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/crix-cx/crix-cx.c b/board/christ/crix-cx/crix-cx.c
+index c3e3162..98f185f 100644
+--- a/board/christ/crix-cx/crix-cx.c
++++ b/board/christ/crix-cx/crix-cx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -639,6 +640,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/crix-cx.h b/include/configs/crix-cx.h
+index 00f0a39..6bd2711 100644
+--- a/include/configs/crix-cx.h
++++ b/include/configs/crix-cx.h
+@@ -17,7 +17,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk1"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -40,7 +40,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	2
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From 4731a35f2fed42189fe34c95f47fd0cbb99a18ed Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:42:17 +0200
+Subject: [PATCH 6/9] medix-rx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/medix-rx/medix-rx.c | 6 ++++++
+ include/configs/medix-rx.h       | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/medix-rx/medix-rx.c b/board/christ/medix-rx/medix-rx.c
+index f71bbd6..147ae95 100644
+--- a/board/christ/medix-rx/medix-rx.c
++++ b/board/christ/medix-rx/medix-rx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -656,6 +657,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/medix-rx.h b/include/configs/medix-rx.h
+index 248bbbd..e672fac 100644
+--- a/include/configs/medix-rx.h
++++ b/include/configs/medix-rx.h
+@@ -13,7 +13,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT		"/dev/mmcblk0p2"
++#define CONFIG_MMCROOT		"/dev/mmcblk0"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -36,7 +36,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	1
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		0	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From cc2489436eb033440f6cbb4b8e2e597d8109c067 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:42:57 +0200
+Subject: [PATCH 7/9] medix-tx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/medix-tx/medix-tx.c | 6 ++++++
+ include/configs/medix-tx.h       | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/medix-tx/medix-tx.c b/board/christ/medix-tx/medix-tx.c
+index 0e6eaa9..32adbb6 100644
+--- a/board/christ/medix-tx/medix-tx.c
++++ b/board/christ/medix-tx/medix-tx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -656,6 +657,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/medix-tx.h b/include/configs/medix-tx.h
+index dd69cf0..647316f 100644
+--- a/include/configs/medix-tx.h
++++ b/include/configs/medix-tx.h
+@@ -13,7 +13,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT		"/dev/mmcblk0p2"
++#define CONFIG_MMCROOT		"/dev/mmcblk0"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -36,7 +36,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	1
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		0	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From 47512d5cb320a02ffda9c71e2b16973c9f1181e0 Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:43:33 +0200
+Subject: [PATCH 8/9] pixi-cx: adapt to rauc
+
+Add watchdog initialisation to the board code, move the
+environment to GP0 and adapt mmcroot to rauc.
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ board/christ/pixi-cx/pixi-cx.c | 6 ++++++
+ include/configs/pixi-cx.h      | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/christ/pixi-cx/pixi-cx.c b/board/christ/pixi-cx/pixi-cx.c
+index 1a8f89a..1d1e429 100644
+--- a/board/christ/pixi-cx/pixi-cx.c
++++ b/board/christ/pixi-cx/pixi-cx.c
+@@ -30,6 +30,7 @@
+ #include <i2c.h>
+ #include <input.h>
+ #include <usb.h>
++#include <watchdog.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -640,6 +641,11 @@ int board_late_init(void)
+ 	}
+ #endif
+ 
++#ifdef CONFIG_IMX_WATCHDOG
++	hw_watchdog_init();
++	printf("Watchdog initialized.\n");
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/include/configs/pixi-cx.h b/include/configs/pixi-cx.h
+index 68bb108..d66f46e 100644
+--- a/include/configs/pixi-cx.h
++++ b/include/configs/pixi-cx.h
+@@ -17,7 +17,7 @@
+ #define CONFIG_MACH_TYPE	3980
+ #define CONFIG_MXC_UART_BASE	UART1_BASE
+ #define CONSOLE_DEV		"ttymxc0"
+-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"
++#define CONFIG_MMCROOT			"/dev/mmcblk1"
+ 
+ #define CONFIG_SUPPORT_EMMC_BOOT /* eMMC specific */
+ 
+@@ -40,7 +40,7 @@
+ #define CONFIG_SYS_FSL_USDHC_NUM	2
+ #if defined(CONFIG_ENV_IS_IN_MMC)
+ #define CONFIG_SYS_MMC_ENV_DEV		1	/* SDHC4 */
+-#define CONFIG_SYS_MMC_ENV_PART		1
++#define CONFIG_SYS_MMC_ENV_PART		4
+ #endif
+ 
+ /* I2C Board Specific Configs */
+-- 
+2.7.4
+
+
+From 711192aabfe2162f986642fa97760e4447af1f5c Mon Sep 17 00:00:00 2001
+From: Peter Fink <pfink@christ-es.de>
+Date: Thu, 28 May 2020 17:44:20 +0200
+Subject: [PATCH 9/9] mx6ces_common: activate watchdog for ces boards
+
+Signed-off-by: Peter Fink <pfink@christ-es.de>
+---
+ include/configs/mx6ces_common.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/configs/mx6ces_common.h b/include/configs/mx6ces_common.h
+index c2953ed..57773b8 100644
+--- a/include/configs/mx6ces_common.h
++++ b/include/configs/mx6ces_common.h
+@@ -226,6 +226,9 @@
+ #define CONFIG_CMD_FBPANEL
+ #endif
+ 
++/* Watchdog */
++#define CONFIG_IMX_WATCHDOG
++
+ #define CONFIG_FAT_WRITE
+ 
+ #ifndef CONFIG_SPL
+-- 
+2.7.4
+
