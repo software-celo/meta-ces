@@ -28,6 +28,7 @@ SRC_URI = " \
 	file://0001-bootlogo-align-center.patch \
 	file://bootlogo.ppm \
 	file://defconfig \
+	${@bb.utils.contains('DISTRO_FEATURES', 'rauc', 'file://rauc.cfg', '', d)} \
 "
 
 LINUX_VERSION = "4.19.17"
