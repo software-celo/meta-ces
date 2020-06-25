@@ -68,7 +68,7 @@ do_rauc_uboot_emmc() {
 	done
 }
 
-do_deploy_append() {
+do_deploy_ces-fb-rauc_append() {
 	for machine in ${UBOOT_MACHINE}; do
 		install -m 0644 ${BUILDDIR}/${UBOOT_IMX_RAUC_FILE} ${DEPLOYDIR}/${UBOOT_IMX_RAUC_PREFIX}-${PV}-${PR}.${UBOOT_IMX_RAUC_SUFFIX}
 		cd ${DEPLOYDIR}
