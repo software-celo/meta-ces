@@ -25,7 +25,6 @@ CES_CORE_LAYERS = " \
 
 CES_RAUC_LAYERS = " \
   ${BBLAYERS_DIR}/meta-rauc \
-  ${BBLAYERS_DIR}/meta-ces-rauc \
   "
 
 CES_LAYERS = " \
