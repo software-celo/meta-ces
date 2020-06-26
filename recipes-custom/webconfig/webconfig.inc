@@ -11,16 +11,15 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/webconfig:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/webconfig/patches:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/webconfig/localpage:"
 
-WEBCONFIG_SRC_URI ?= ""
-
 inherit npm
 
 WEBCONFIG_SRC_BRANCH ?= "master"
 WEBCONFIG_SRC_PROTOCOL ?= "ssh"
+WEBCONFIG_SRC_URI ?= "false"
 
 S = "${WORKDIR}/git"
 SRC_URI = " \
-	${WEBCONFIG_SRC_URI};branch=${WEBCONFIG_SRC_BRANCH};protocol=${WEBCONFIG_SRC_PROTOCOL} \
+	${@bb.utils.contains('WEBCONFIG_SRC_URI', 'false', '', '${WEBCONFIG_SRC_URI};branch=${WEBCONFIG_SRC_BRANCH};protocol=${WEBCONFIG_SRC_PROTOCOL}', d)} \
 	file://webconfig.service \
 	file://footer.png \
 	file://header-logo-center.png \
