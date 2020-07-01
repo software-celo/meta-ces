@@ -3,7 +3,6 @@
 #
 #   Copyright (c) Christ Electronic Systems GmbH 2020-2020
 #   Copyright (c) Steffen Kothe <skothe@christ-es.de> 2020-2020
-#   Copyright (c) Steffen Kothe <steffen.kothe.gc1993@googlemail.com> 2020-2020
 #
 #
 
@@ -13,7 +12,7 @@
 
 LIC_XML_MANIFEST ?= "0"
 LIC_DISABLE_HTML_TO_PDF ?= "0"
-LIC_CES_TRANSFORM_FILE = "${BBLAYERS_DIR}/meta-ces/recipes/images/image-base/ces-base/license-transform/ces-license-base.xsl"
+LIC_CES_TRANSFORM_FILE := "${THISDIR}/license-transform/ces-license-base.xsl"
 
 #   Control deploy by fileextensions automatically. Wildcard for files is not provided!
 #   By default, this variable is empty.
@@ -471,7 +470,7 @@ def getNPMModuleLicenseNode(rootfs):
 
     if 0 != modulesConflictCnt: bb.warn("Conflicting/Multiple NPM modules:  %s" % modulesConflictCnt)
     if 0 != modulesDoubleCnt:   bb.warn("Identical NPM modules:             %s" % modulesDoubleCnt)
-    bb.debug(1, "Deteced NPM modules total:     %s" % modulesCnt)
+    bb.debug(1, "Detected NPM modules total:     %s" % modulesCnt)
 
     sortedList = sorted ( moduleList.findall("NpmModule") , key = lambda x: x.find("Modulename").text.casefold())
     moduleList[:] = sortedList
