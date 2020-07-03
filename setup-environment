@@ -22,6 +22,8 @@ else
     fi
 fi
 
+BB_ENV_EXTRAWHITE="RAUC_VAULT_TOKEN"
+
 THIS_LAYER_DIR=`dirname $THIS_SCRIPT`
 
 export TEMPLATECONF="$THIS_LAYER_DIR/conf"

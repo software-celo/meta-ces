@@ -30,3 +30,7 @@ MACHINE ??= "pixi-cdl100"
 
 # See the supported distro configurations under meta-ces/conf/distro/
 DISTRO ?= "ces-fb"
+
+# Use vault for rauc image signing? Specify vault URL.
+RAUC_USE_VAULT ?= "0"
+RAUC_VAULT_URL ?= ""
