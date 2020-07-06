@@ -40,7 +40,7 @@ UBOOT_IMX_RAUC_PREFIX="u-boot"
 UBOOT_IMX_RAUC_SUFFIX="rauc"
 UBOOT_IMX_RAUC_FILE="${UBOOT_IMX_RAUC_PREFIX}.${UBOOT_IMX_RAUC_SUFFIX}"
 
-do_install[postfuncs] += "${@bb.utils.contains('DISTRO_FEATURES', 'rauc', 'do_rauc_uboot_emmc', '', d)}"
+do_deploy[prefuncs] += "${@bb.utils.contains('DISTRO_FEATURES', 'rauc', 'do_rauc_uboot_emmc', '', d)}"
 
 do_rauc_uboot_emmc() {
 
