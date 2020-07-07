@@ -4,7 +4,9 @@ LICENSE = "MIT"
 
 PV = "V1.0"
 
-inherit bundle
+inherit bundle features_check
+
+REQUIRED_DISTRO_FEATURES = "rauc"
 
 RAUC_BUNDLE_COMPATIBLE = "${MACHINE}"
 RAUC_BUNDLE_VERSION = "${PV}-${PR}"
