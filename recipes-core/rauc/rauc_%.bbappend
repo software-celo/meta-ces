@@ -1,5 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/rauc:"
 
+inherit features_check
+
+REQUIRED_DISTRO_FEATURES = "rauc"
+
 DEPENDS_append = " dbus"
 
 RAUC_DEMO_KEYRING_FILE = "demo-ca.cert.pem"
