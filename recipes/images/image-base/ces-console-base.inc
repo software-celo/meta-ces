@@ -73,6 +73,7 @@ CES_MINIMAL_PACKAGES_INSTALL = " \
 	ca-certificates \
 	udev-extra-rules \
 	u-boot-fw-utils \
+	coreutils \
 "
 
 IMAGE_INSTALL_append = " \
