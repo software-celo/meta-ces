@@ -117,7 +117,7 @@ install_custom_oem () {
 	minor=`echo ${PV} | cut -d'.' -f2`
 
 	if [ -n "${CUSTOM_OEM_LOGO}" ] && [ -n "${CUSTOM_OEM_FAVICON}" ];then
-		if [ ${minor}${minor} -gt 12 ] ;then
+		if [ ${major}${minor} -gt 12 ] ;then
 			rm -f ${D}${CLIENT_PATH}/image_icons/headerlogo.png
 			rm -f ${D}${CLIENT_PATH}/favicon.ico
 
