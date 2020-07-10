@@ -91,8 +91,10 @@ do_install (){
 	install -m 0000 ${S}/server/default_config_files/login.json ${D}${DEFAULT_SAVE_PATH}
 
 	find ${S}/dist/client/ -name "*" -maxdepth 1 -type f -exec install -m 644 {} ${D}${CLIENT_PATH} \;
-	install -d ${D}${CLIENT_PATH}/images_icons
-	install -m 644 ${S}/dist/client/images_icons/* ${D}${CLIENT_PATH}/images_icons
+	if [ -d ${S}/dist/client/images_icons ]; then
+		install -d ${D}${CLIENT_PATH}/images_icons
+		install -m 644 ${S}/dist/client/images_icons/* ${D}${CLIENT_PATH}/images_icons
+	fi
 
 	install -m 0644 ${S}/dist/server/main.bundle.js ${D}${WEBCONFIG_PATH}/server/
 	install -m 0644 ${S}/build_license/client_license.json ${D}${WEBCONFIG_PATH}/server/
