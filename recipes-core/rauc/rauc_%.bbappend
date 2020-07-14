@@ -55,6 +55,8 @@ def write_file(content, path):
     return True
 
 
+do_fetch_vault_keys[vardeps] += "DISTRO_FEATURES RAUC_VAULT_URL RAUC_VAULT_SERIAL RAUC_VAULT_TOKEN"
+
 python do_fetch_vault_keys () {
     import json
     import urllib.request
