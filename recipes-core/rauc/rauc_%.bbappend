@@ -6,7 +6,12 @@ REQUIRED_DISTRO_FEATURES = "rauc"
 
 DEPENDS_append = " dbus"
 
+RAUC_DEMO_MODE ??= "1"
+
 RAUC_DEMO_KEYRING_FILE = "demo-ca.cert.pem"
+RAUC_DEMO_KEYRING_URI = "file://${RAUC_DEMO_KEYRING_FILE}"
+
+SRC_URI_remove += "${@bb.utils.contains('RAUC_DEMO_MODE', '1', '${RAUC_KEYRING_URI}', '', d)}"
 
 do_install[postfuncs] += "do_set_compatible"
 
@@ -29,7 +34,10 @@ python __anonymous () {
     if use_vault:
         d.appendVarFlag('do_unpack', 'postfuncs', ' do_fetch_vault_keys')
     else:
-        d.setVar('RAUC_KEYRING_FILE', d.getVar('RAUC_DEMO_KEYRING_FILE', expand=True))
+        demo_mode = bb.utils.contains('RAUC_DEMO_MODE', '1', True, False, d)
+        if demo_mode:
+            d.appendVar('SRC_URI', '${RAUC_DEMO_KEYRING_URI}')
+            d.appendVarFlag('do_unpack', 'postfuncs', ' do_rename_demo_keyring')
     # print only once per build
     if d.getVar('BB_WORKERCONTEXT') != '1':
         if use_vault:
@@ -55,6 +63,11 @@ def write_file(content, path):
     return True
 
 
+do_rename_demo_keyring (){
+    mv ${WORKDIR}/${RAUC_DEMO_KEYRING_FILE} ${WORKDIR}/${RAUC_KEYRING_FILE}
+}
+
+
 do_fetch_vault_keys[vardeps] += "DISTRO_FEATURES RAUC_VAULT_URL RAUC_VAULT_SERIAL RAUC_VAULT_TOKEN"
 
 python do_fetch_vault_keys () {
@@ -66,8 +79,6 @@ python do_fetch_vault_keys () {
     vault_key_private_key = ("rsa_private_key", d.getVar('RAUC_KEY_FILE', expand=True))
     vault_key_customer = "customer"
     vault_key_data = "data"
-
-    os.remove(vault_key_ca_chain[1])
 
     vault_url = d.getVar('RAUC_VAULT_URL', expand=True)
     vault_serial = d.getVar('RAUC_VAULT_SERIAL', expand=True)
