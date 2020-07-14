@@ -26,6 +26,7 @@ RAUC_CERT_FILE = "${WORKDIR}/certs/rauc.cert.pem"
 RAUC_DEMO_KEY_FILE := "${THISDIR}/rauc-demo-certs/rauc-demo-1.key.pem"
 RAUC_DEMO_CERT_FILE := "${THISDIR}/rauc-demo-certs/rauc-demo-1.cert.pem"
 
+do_unpack[vardeps] += "DISTRO_FEATURES RAUC_VAULT_URL RAUC_VAULT_SERIAL RAUC_VAULT_TOKEN"
 
 do_unpack_prepend() {
     import shutil
@@ -34,7 +35,7 @@ do_unpack_prepend() {
     bundle_path = d.getVar('BUNDLE_DIR', expand=True)
     if os.path.isdir(bundle_path):
         shutil.rmtree(bundle_path)
-        bb.warn("wiping bundle directory to avoid bundle contamination")
+        bb.note("wiping bundle directory to avoid bundle contamination")
 }
 
 
