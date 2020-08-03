@@ -52,6 +52,7 @@ SOFTWARE_TOOL_PACKAGES_INSTALL = " \
 	tzdata-misc \
 	tzdata-posix \
 	tzdata-right \
+	tzdata-core \
 "
 
 CES_MINIMAL_PACKAGES_INSTALL = " \
