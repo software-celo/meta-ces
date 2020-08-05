@@ -1,0 +1,198 @@
+# standard images build
+image: $REGISTRY
+stages:
+- Qt_Demoimage_Run_1
+- Qt_Demoimage_Run_2
+- Console_Demoimage_Run_1
+- Console_Demoimage_Run_2
+- Webconfig_Run_1
+- Webconfig_Run_2
+
+variables:
+  HOME_PATH: "/home/builder"
+  SOURCES_BRANCH: "$CES_LATEST_YOCTO_RELEASE"
+  CLOUDPW: "$CLOUD_PW"
+  DISTRO_ARG: "ces-fb"
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - when: never
+
+before_script:
+  - git clone $IMAGE_BUILDER
+  - cp yocto-image-builder/build.sh "${HOME_PATH}"
+  - cp yocto-image-builder/deploy.sh "${HOME_PATH}"
+  - cd "${HOME_PATH}"
+  - sudo chmod -R 777 downloads/
+  - sudo chmod -R 777 sstate-cache/
+
+pixi-cdl100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "pixi-cdl100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "pixi-cdl100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+pixi-cdl100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "pixi-cdl100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "pixi-cdl100" "ces-console-demoimage" "ces-console-demoimage"
+
+pixi-cdl100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "pixi-cdl100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "pixi-cdl100" "ces-webconfig-image" "ces-webconfig-image"
+
+pixi-cq100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "pixi-cq100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "pixi-cq100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+pixi-cq100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "pixi-cq100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "pixi-cq100" "ces-console-demoimage" "ces-console-demoimage"
+
+pixi-cq100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "pixi-cq100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "pixi-cq100" "ces-webconfig-image" "ces-webconfig-image"
+
+crix-cq100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "crix-cq100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "crix-cq100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+crix-cq100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "crix-cq100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "crix-cq100" "ces-console-demoimage" "ces-console-demoimage"
+
+crix-cq100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_1
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "crix-cq100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "crix-cq100" "ces-webconfig-image" "ces-webconfig-image"
+
+crix-arq100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "crix-arq100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "crix-arq100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+crix-arq100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "crix-arq100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "crix-arq100" "ces-console-demoimage" "ces-console-demoimage"
+
+crix-arq100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "crix-arq100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "crix-arq100" "ces-webconfig-image" "ces-webconfig-image"
+
+blix-bq100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "blix-bq100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "blix-bq100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+blix-bq100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "blix-bq100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "blix-bq100" "ces-console-demoimage" "ces-console-demoimage"
+
+blix-bq100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "blix-bq100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "blix-bq100" "ces-webconfig-image" "ces-webconfig-image"
+
+4cbox-cq100_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "4cbox-cq100" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq100" "ces-qt-demoimage" "ces-qt-demoimage"
+
+4cbox-cq100_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "4cbox-cq100" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq100" "ces-console-demoimage" "ces-console-demoimage"
+
+4cbox-cq100_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "4cbox-cq100" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq100" "ces-webconfig-image" "ces-webconfig-image"
+
+4cbox-cq200_qt_demoimage:
+  tags:
+     - standard-image
+  stage: Qt_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "4cbox-cq200" -d "${DISTRO_ARG}" -i "ces-qt-demoimage"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq200" "ces-qt-demoimage" "ces-qt-demoimage"
+
+4cbox-cq200_console_demoimage:
+  tags:
+     - standard-image
+  stage: Console_Demoimage_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -m "4cbox-cq200" -d "${DISTRO_ARG}" -i "ces-console-demoimage"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq200" "ces-console-demoimage" "ces-console-demoimage"
+
+4cbox-cq200_webconfig:
+  tags:
+     - standard-image
+  stage: Webconfig_Run_2
+  script:
+     - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "4cbox-cq200" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
+     - ./deploy.sh "$CLOUDPW" "4cbox-cq200" "ces-webconfig-image" "ces-webconfig-image"
