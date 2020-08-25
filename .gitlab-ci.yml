@@ -7,6 +7,7 @@ stages:
 - Console_Demoimage_Run_2
 - Webconfig_Run_1
 - Webconfig_Run_2
+- Toolchain
 
 variables:
   HOME_PATH: "/home/builder"
@@ -196,3 +197,12 @@ blix-bq100_webconfig:
   script:
      - ./build.sh -b "${SOURCES_BRANCH}" -c "webconfig" -m "4cbox-cq200" -d "${DISTRO_ARG}" -i "ces-webconfig-image"
      - ./deploy.sh "$CLOUDPW" "4cbox-cq200" "ces-webconfig-image" "ces-webconfig-image"
+
+qt5_toolchain:
+  tags:
+     - standard-image
+  stage: Toolchain
+  script:
+     - ./build.sh -T -b "${SOURCES_BRANCH}" -i "meta-toolchain-qt5"
+     - ./deploy.sh "$CLOUDPW" "toolchain" "meta-toolchain-qt5" "meta-toolchain-qt5"
+
