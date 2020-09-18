@@ -203,6 +203,14 @@ qt5_toolchain:
      - standard-image
   stage: Toolchain
   script:
+     - ./build.sh -T -b "warrior" -i "meta-toolchain-qt5"
+     - ./deploy.sh "$CLOUDPW" "toolchain" "meta-toolchain-qt5/warrior" "meta-toolchain-qt5"
+
+qt5_toolchain:
+  tags:
+     - standard-image
+  stage: Toolchain
+  script:
      - ./build.sh -T -b "${SOURCES_BRANCH}" -i "meta-toolchain-qt5"
-     - ./deploy.sh "$CLOUDPW" "toolchain" "meta-toolchain-qt5" "meta-toolchain-qt5"
+     - ./deploy.sh "$CLOUDPW" "toolchain" "meta-toolchain-qt5/dunfell" "meta-toolchain-qt5"
 
