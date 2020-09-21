@@ -1,0 +1,10 @@
+[Unit]
+Description=rtc sanity check
+
+[Service]
+ExecStart=/usr/sbin/rtc-sanity-check.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target
