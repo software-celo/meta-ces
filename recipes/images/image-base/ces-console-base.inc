@@ -58,6 +58,7 @@ SOFTWARE_TOOL_PACKAGES_INSTALL = " \
 CES_MINIMAL_PACKAGES_INSTALL = " \
 	sysinfo \
 	systemd-bootcheck \
+	systemd-rtc-sanity-check \
 	userconf \
 	busybox \
 	packagegroup-base \
