@@ -6,11 +6,11 @@ inherit qmake5
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/ces-qt-browser:"
 
-PV = "2.1+gitr${SRCPV}"
+PV = "2.2+gitr${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "8959fcd039e57aab0b6b775cafcf3d293445a83a"
+SRCREV = "ab66902dfae34b2f300309edd6d376f4471c7f4b"
 SRCBRANCH = "ces-qt-browser"
 
 SRC_URI = "git://github.com/software-celo/ces-qt-browser.git;branch=${SRCBRANCH} \
