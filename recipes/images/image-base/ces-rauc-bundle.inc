@@ -2,7 +2,7 @@ SUMMARY = "CES RAUC bundle for rootfs, kernel, bootloader & devictree"
 
 LICENSE = "MIT"
 
-PV = "V1.0"
+PV ?= "V1.0"
 
 inherit bundle features_check
 
@@ -25,6 +25,11 @@ RAUC_CERT_FILE = "${WORKDIR}/certs/rauc.cert.pem"
 
 RAUC_DEMO_KEY_FILE := "${THISDIR}/rauc-demo-certs/rauc-demo-1.key.pem"
 RAUC_DEMO_CERT_FILE := "${THISDIR}/rauc-demo-certs/rauc-demo-1.cert.pem"
+
+TIME := "${@time.strftime('%H%M%S',time.localtime())}"
+DATE := "${@time.strftime('%Y%m%d',time.localtime())}"
+
+BUNDLE_NAME ?= "${RAUC_SLOT_rootfs}-${MACHINE}-${DATETIME}-${PV}"
 
 do_unpack[vardeps] += "DISTRO_FEATURES RAUC_VAULT_URL RAUC_VAULT_SERIAL RAUC_VAULT_TOKEN"
 
