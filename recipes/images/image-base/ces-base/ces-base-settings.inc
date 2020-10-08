@@ -11,9 +11,11 @@ COPY_LIC_DIRS = "1"
                                                      
 #create the file /etc/timestamp
 IMAGE_POSTPROCESS_COMMAND = "rootfs_update_timestamp"
+
+BUILDNAME = "${PV}"
                                                      
 #create the deployment directory-tree
-require christ-image-fstype.inc
+require ces-image-fstype.inc
 require ces-license-xml-manifest.inc
                                                      
 DEPENDS_append = " virtual/bootloader"
@@ -25,3 +27,6 @@ IMAGE_INITSCRIPTS   = " "
 IMAGE_LOGIN_MANAGER = "busybox shadow"
                                                      
 EXTRA_USERS_PARAMS = " usermod -P root123 root; "
+
+DATE := "${@time.strftime('%Y%m%d',time.localtime())}"
+TIME := "${@time.strftime('%H%M%S',time.localtime())}"
