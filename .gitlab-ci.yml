@@ -27,8 +27,6 @@ before_script:
   - cp yocto-image-builder/build.sh "${HOME_PATH}"
   - cp yocto-image-builder/deploy.sh "${HOME_PATH}"
   - cd "${HOME_PATH}"
-  - sudo chmod -R 777 downloads/
-  - sudo chmod -R 777 sstate-cache/
 
 pixi-cdl100_qt_demoimage:
   tags:
