@@ -2,8 +2,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/base-files:"
 
 do_install_append() {
 
+    MMCDEV=${@bb.utils.contains_any('MACHINE', 'medix-rq100 medix-tdl100', '0', '1', d)}
+
     if ${@bb.utils.contains('DISTRO_FEATURES', 'rauc', 'false', 'true', d)}; then
-        echo "/dev/mmcblk1p1  /boot  vfat  ro  0  0" >> ${D}/${sysconfdir}/fstab
+        echo "/dev/mmcblk${MMCDEV}p1  /boot  vfat  ro  0  0" >> ${D}/${sysconfdir}/fstab
     else
         install -d -m 0755 ${D}/persistent
         install -d -m 0755 ${D}/ofs.base
