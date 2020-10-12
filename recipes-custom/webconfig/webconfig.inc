@@ -61,6 +61,7 @@ do_fetch[prefuncs] += "do_webconfig_uri_check"
 
 do_compile (){
 
+	npm config set strict-ssl false
 	npm install
 	npm run build
 	npm prune --production
