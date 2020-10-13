@@ -5,7 +5,7 @@ LOGFILE="/tmp/curt.log"
 
 partition_custom () {
 
-    umount -l /dev/mmcblk${MMCDEV}p*
+    umount -l /dev/mmcblk${MMCDEV}p* 2>/dev/null
 
     # create 2x1GB (forA/B) and 1,6GB (data) on 4GB eMMC
     sfdisk --force /dev/mmcblk${MMCDEV} << EOF
