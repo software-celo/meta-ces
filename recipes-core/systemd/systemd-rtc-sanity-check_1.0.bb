@@ -27,7 +27,7 @@ SYSTEMD_SERVICE_${PN} = "rtc-sanity-check.service"
 RDEPENDS_${PN} = "systemd"
 
 FILES_${PN} = " \
-    ${systemd_unitdir}/system/.service \
+    ${systemd_system_unitdir}/*.service \
     ${sbindir} \
 "
 
