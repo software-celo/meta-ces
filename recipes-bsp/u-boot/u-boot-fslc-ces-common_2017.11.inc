@@ -27,7 +27,7 @@ DEPENDS += "bison-native"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/u-boot-fslc-ces:"
 
-SRCREV = "fee5c303cecd47a01c615a52e629e3913a68be10"
+SRCREV = "dec0ed1512cc0d17f0b26c6e5f9cc2d76a2b222c"
 SRCBRANCH = "ces-mainline-2017.11+fslc"
 SRC_URI = " \
 	git://github.com/software-celo/u-boot-fslc.git;branch=${SRCBRANCH} \
